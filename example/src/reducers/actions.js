@@ -1,91 +1,91 @@
 import * as types from './actionTypes';
 import fetch from 'isomorphic-fetch';
 
-export function loadTest1Complete(items) {
+export function loadLayersComplete(items) {
   return {
-    type: types.LOAD_TEST1_COMPLETE,
+    type: types.LOAD_LAYERS_COMPLETE,
     items,
   };
 }
 
-export function loadTest1Failed(error) {
+export function loadLayersFailed(error) {
   return {
-    type: types.LOAD_TEST1_FAILED,
+    type: types.LOAD_LAYERS_FAILED,
     error,
   };
 }
 
-export function loadTest1() {
+export function loadLayers() {
   return dispatch => {
     dispatch({
-      type: types.LOAD_TEST1,
+      type: types.LOAD_LAYERS,
     });
 
-    fetch('/rest/test1').then((response) => {
+    fetch('/rest/layers').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }
       return response.json();
     })
     .then((items) => {
-      dispatch(loadTest1Complete(items));
+      dispatch(loadLayersComplete(items));
     });
   };
 }
 
-export function loadTest2Complete(items) {
+export function loadUsersComplete(items) {
   return {
-    type: types.LOAD_TEST2_COMPLETE,
+    type: types.LOAD_USERS_COMPLETE,
     items,
   };
 }
 
-export function loadTest2Failed(error) {
+export function loadUsersFailed(error) {
   return {
-    type: types.LOAD_TEST2_FAILED,
+    type: types.LOAD_USERS_FAILED,
     error,
   };
 }
 
-export function loadTest2() {
+export function loadUsers() {
   return dispatch => {
     dispatch({
-      type: types.LOAD_TEST2,
+      type: types.LOAD_USERS,
     });
 
-    fetch('/rest/test2').then((response) => {
+    fetch('/rest/users').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }
       return response.json();
     })
     .then((items) => {
-      dispatch(loadTest2Complete(items));
+      dispatch(loadUsersComplete(items));
     });
   };
 }
 
-export function insertTest2Complete(item) {
+export function insertUserComplete(item) {
   return {
-    type: types.INSERT_TEST2_COMPLETE,
+    type: types.INSERT_USER_COMPLETE,
     item,
   };
 }
 
-export function insertTest2Failed(error) {
+export function insertUserFailed(error) {
   return {
-    type: types.INSERT_TEST2_FAILED,
+    type: types.INSERT_USER_FAILED,
     error,
   };
 }
 
-export function insertTest2(newItem) {
+export function insertUser(newItem) {
   return dispatch => {
     dispatch({
-      type: types.INSERT_TEST2,
+      type: types.INSERT_USER,
     });
 
-    fetch('/rest/test2', {
+    fetch('/rest/users', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -99,32 +99,32 @@ export function insertTest2(newItem) {
       return response.json();
     })
     .then((item) => {
-      dispatch(insertTest2Complete(item));
+      dispatch(insertUserComplete(item));
     });
   };
 }
 
-export function insertTest1Complete(item) {
+export function insertLayerComplete(item) {
   return {
-    type: types.INSERT_TEST1_COMPLETE,
+    type: types.INSERT_LAYER_COMPLETE,
     item,
   };
 }
 
-export function insertTest1Failed(error) {
+export function insertLayerFailed(error) {
   return {
-    type: types.INSERT_TEST1_FAILED,
+    type: types.INSERT_LAYER_FAILED,
     error,
   };
 }
 
-export function insertTest1(newItem) {
+export function insertLayer(newItem) {
   return dispatch => {
     dispatch({
-      type: types.INSERT_TEST1,
+      type: types.INSERT_LAYER,
     });
 
-    fetch('/rest/test1', {
+    fetch('/rest/layers', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -138,7 +138,7 @@ export function insertTest1(newItem) {
       return response.json();
     })
     .then((item) => {
-      dispatch(insertTest1Complete(item));
+      dispatch(insertLayerComplete(item));
     });
   };
 }

@@ -4,32 +4,32 @@ import Datastore from 'nedb';
 const router = new express.Router();
 const db = {};
 
-db.test1 = new Datastore('./data/test1.db');
-db.test2 = new Datastore('./data/test2.db');
+db.layers = new Datastore('./data/layers.db');
+db.users = new Datastore('./data/users.db');
 
-db.test1.loadDatabase();
-db.test2.loadDatabase();
+db.layers.loadDatabase();
+db.users.loadDatabase();
 
-router.get('/rest/test1', (req, res) => {
-  db.test1.find({}, (err, docs) => {
+router.get('/rest/layers', (req, res) => {
+  db.layers.find({}, (err, docs) => {
     res.json(docs);
   });
 });
 
-router.get('/rest/test2', (req, res) => {
-  db.test2.find({}, (err, docs) => {
+router.get('/rest/users', (req, res) => {
+  db.users.find({}, (err, docs) => {
     res.json(docs);
   });
 });
 
-router.post('/rest/test1', (req, res) => {
-  db.test1.insert(req.body, (err, newDoc) => {
+router.post('/rest/layers', (req, res) => {
+  db.layers.insert(req.body, (err, newDoc) => {
     res.json(newDoc);
   });
 });
 
-router.post('/rest/test2', (req, res) => {
-  db.test2.insert(req.body, (err, newDoc) => {
+router.post('/rest/users', (req, res) => {
+  db.users.insert(req.body, (err, newDoc) => {
     res.json(newDoc);
   });
 });

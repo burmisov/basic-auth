@@ -6,39 +6,19 @@ import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import { List, ListItem } from 'material-ui/List';
-import { browserHistory } from 'react-router';
+import uuid from 'uuid';
 
 const style = {
   marginLeft: 20,
 };
 
-class Test2 extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
+class Layers extends Component {
   render() {
     return (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
 
           <Paper zDepth={2}>
-            <FlatButton
-              label="Кролики"
-              onClick={() => {
-                browserHistory.push({
-                  pathname: '/test1/',
-                });
-              }}
-            />
-            <FlatButton
-              label="Загрузить"
-              onClick={() => {
-                this.props.actions.loadTest2();
-              }}
-            />
             <Divider />
             <TextField
               hintText="Описание"
@@ -51,16 +31,17 @@ class Test2 extends Component {
             <FlatButton
               label="Добавить"
               onClick={() => {
-                this.props.actions.insertTest2({
+                this.props.actions.insertLayer({
                   description: this.refs.description.input.value,
                 });
               }}
             />
             <List>
               {
-                this.props.test2.get('items').map((item) => (
+                this.props.layers.get('items') &&
+                this.props.layers.get('items').map((item) => (
                   <ListItem
-                    key={item.description}
+                    key={uuid.v4()}
                   >
                     {item.description}
                   </ListItem>
@@ -74,10 +55,10 @@ class Test2 extends Component {
   }
 }
 
-Test2.propTypes = {
-  test1: PropTypes.object,
-  test2: PropTypes.object,
+Layers.propTypes = {
+  layers: PropTypes.object,
+  users: PropTypes.object,
   actions: PropTypes.object,
 };
 
-export default Test2;
+export default Layers;

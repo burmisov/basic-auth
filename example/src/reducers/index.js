@@ -1,7 +1,7 @@
-import test1 from './test1';
-import test2 from './test2';
+import layers from './layers';
+import users from './users';
 
 export default {
-  test1,
-  test2,
+  layers,
+  users,
 };

@@ -10,25 +10,25 @@ db.users = new Datastore('./data/users.db');
 db.layers.loadDatabase();
 db.users.loadDatabase();
 
-router.get('/rest/layers', (req, res) => {
+router.get('/api/layers', (req, res) => {
   db.layers.find({}, (err, docs) => {
     res.json(docs);
   });
 });
 
-router.get('/rest/users', (req, res) => {
+router.get('/api/users', (req, res) => {
   db.users.find({}, (err, docs) => {
     res.json(docs);
   });
 });
 
-router.post('/rest/layers', (req, res) => {
+router.post('/api/layers', (req, res) => {
   db.layers.insert(req.body, (err, newDoc) => {
     res.json(newDoc);
   });
 });
 
-router.post('/rest/users', (req, res) => {
+router.post('/api/users', (req, res) => {
   db.users.insert(req.body, (err, newDoc) => {
     res.json(newDoc);
   });

@@ -4,16 +4,21 @@ import { Router, browserHistory, Route, Redirect } from 'react-router';
 
 import Layers from './components/Layers';
 import Users from './components/Users';
+import SignIn from './components/SignIn';
 import NotFound from './components/NotFound';
 import App from './components/App';
 
-import bindAuth from './auth/bindAuth';
+import bindAuth from '../../src/bindAuth';
 
 export default (reduxStore) => {
-  const requireAccess = bindAuth(reduxStore, (nextState) => {
-    throw new Error('Не авторизован');
-  }, (nextState) => {
-    throw new Error('Доступ запрещен');
+  const requireAccess = bindAuth(reduxStore, () => {
+    browserHistory.push({
+      pathname: '/uauth',
+    });
+  }, () => {
+    browserHistory.push({
+      pathname: '/denied',
+    });
   });
 
   return () => (
@@ -23,6 +28,7 @@ export default (reduxStore) => {
           <Redirect from="/" to="/layers" />
           <Route path="/layers" component={Layers} />
           <Route path="/users" component={Users} onEnter={requireAccess()} />
+          <Route path="/unauth" component={SignIn} />
           <Route path="*" component={NotFound} />
         </Route>
       </Router>

@@ -55,15 +55,9 @@ class App extends Component {
             <Tabs
               value={location.pathname}
               onChange={(value) => {
-                if (location.pathname === '/users' && value === '/layers') {
-                  browserHistory.push({
-                    pathname: '/layers',
-                  });
-                } else if (location.pathname === '/layers' && value === '/users') {
-                  browserHistory.push({
-                    pathname: '/users',
-                  });
-                }
+                browserHistory.push({
+                  pathname: value,
+                });
               }}
             >
               <Tab
@@ -86,6 +80,18 @@ class App extends Component {
                 <div>
                   {
                     location.pathname === '/users' &&
+                    content
+                  }
+                </div>
+              </Tab>
+              <Tab
+                icon={<LockOpen />}
+                label="Аутентификация"
+                value={'/unauth'}
+              >
+                <div>
+                  {
+                    location.pathname === '/unauth' &&
                     content
                   }
                 </div>

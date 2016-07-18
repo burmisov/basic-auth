@@ -1,47 +1,45 @@
-import { fromJS } from 'immutable';
-import uuid from 'uuid';
+import { List, fromJS } from 'immutable';
 
 import {
-  SIGN_IN,
-  SIGN_IN_COMPLETE,
-  SIGN_IN_FAILED,
-  SIGN_OUT,
-  SIGN_OUT_COMPLETE,
-  SIGN_OUT_FAILED,
+  LOAD_USERS,
+  LOAD_USERS_COMPLETE,
+  LOAD_USERS_FAILED,
+  INSERT_USER,
+  INSERT_USER_COMPLETE,
+  INSERT_USER_FAILED,
 } from './actionTypes';
 
 const defaultState = fromJS({
   isFetching: false,
   error: '',
-  profile: {
-    id: uuid.v4(),
-    roles: ['public'],
-  },
 });
+
+defaultState.items = new List();
 
 export default function layers(state = defaultState, action) {
   switch (action.type) {
-    case SIGN_IN:
+    case LOAD_USERS:
       return state.set('isFetching', true)
       .set('error', '');
 
-    case SIGN_IN_COMPLETE:
+    case LOAD_USERS_COMPLETE:
       return state.set('isFetching', false)
-      .set('error', '').set('profile', action.profile);
+      .set('error', '').set('items', new List(action.items));
 
-    case SIGN_IN_FAILED:
+    case LOAD_USERS_FAILED:
       return state.set('isFetching', false)
       .set('error', action.error);
 
-    case SIGN_OUT:
+    case INSERT_USER:
       return state.set('isFetching', true)
       .set('error', '');
 
-    case SIGN_OUT_COMPLETE:
+    case INSERT_USER_COMPLETE:
       return state.set('isFetching', false)
-      .set('error', '').set('profile', action.profile);
+      .set('error', '')
+      .set('items', state.get('items').concat([action.item]));
 
-    case SIGN_OUT_FAILED:
+    case INSERT_USER_FAILED:
       return state.set('isFetching', false)
       .set('error', action.error);
     default:

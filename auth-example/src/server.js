@@ -5,8 +5,13 @@ import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import router from './router';
+import auth from '../../src';
+import buildStore from '../../src/store/JSONStore';
+import path from 'path';
 
 const app = express();
+
+auth(app, { store: buildStore(path.join(process.cwd(), '/data/store.json')) });
 
 app.use(bodyParser.json({ limit: '1024mb' }));
 app.use(router);
@@ -22,7 +27,7 @@ const server = new WebpackDevServer(compiler, {
   hot: true,
   historyApiFallback: true,
   proxy: {
-    '/rest/*': 'http://localhost:6139',
+    '/*': 'http://localhost:6139',
   },
 });
 

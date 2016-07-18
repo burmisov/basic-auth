@@ -11,14 +11,13 @@ import App from './components/App';
 import bindAuth from '../../src/bindAuth';
 
 export default (reduxStore) => {
-  const requireAccess = bindAuth(reduxStore, () => {
-    browserHistory.push({
-      pathname: '/uauth',
+  const requireAccess = bindAuth(reduxStore, (nextState, replaceState) => {
+    replaceState({
+      next: nextState.location.pathname,
+      accessPermissions: nextState.accessPermissions,
     });
-  }, () => {
-    browserHistory.push({
-      pathname: '/denied',
-    });
+  }, (nextState, replaceState) => {
+    replaceState({}, '/403');
   });
 
   return () => (
@@ -28,7 +27,7 @@ export default (reduxStore) => {
           <Redirect from="/" to="/layers" />
           <Route path="/layers" component={Layers} />
           <Route path="/users" component={Users} onEnter={requireAccess()} />
-          <Route path="/unauth" component={SignIn} />
+          <Route path="/signin" component={SignIn} />
           <Route path="*" component={NotFound} />
         </Route>
       </Router>

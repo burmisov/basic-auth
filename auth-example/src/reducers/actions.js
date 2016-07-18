@@ -21,7 +21,7 @@ export function loadLayers() {
       type: types.LOAD_LAYERS,
     });
 
-    fetch('/rest/layers').then((response) => {
+    fetch('/api/layers').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }
@@ -53,7 +53,7 @@ export function loadUsers() {
       type: types.LOAD_USERS,
     });
 
-    fetch('/rest/users').then((response) => {
+    fetch('/api/users').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }
@@ -85,7 +85,7 @@ export function insertUser(newItem) {
       type: types.INSERT_USER,
     });
 
-    fetch('/rest/users', {
+    fetch('/api/users', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -124,7 +124,7 @@ export function insertLayer(newItem) {
       type: types.INSERT_LAYER,
     });
 
-    fetch('/rest/layers', {
+    fetch('/api/layers', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

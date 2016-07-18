@@ -1,18 +1,4 @@
-function checkAccess(user, accessPermission, resourceId) {
-  if (user.profile.roles) {
-    user.profile.roles.forEach((role) => {
-      if (role.accessPermissions[accessPermission]) {
-        role.accessPermissions[accessPermission].forEach((id) => {
-          if (id === resourceId) {
-            return true;
-          }
-        });
-      }
-    });
-  }
-
-  return false;
-}
+import checkAccess from './checkAccess';
 
 export default function (redux, handleSignIn, handleDenied) {
   return (resourceId, accessPermission) => (nextState, transition) => {

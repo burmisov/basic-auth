@@ -5,7 +5,7 @@ module.exports = {
   entry: {
     app: [
       'webpack/hot/dev-server',
-      './src/app.js',
+      './examples/auth/src/app.js',
     ],
   },
 

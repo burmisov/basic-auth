@@ -70,7 +70,7 @@
     "accessPermissions": {
       "route-viewing": ["layers", "users"],
       "viewing": [],
-      "editing": [],
+      "editing": []
     },
     "userIds": ["bb95c1cb-fe6d-4ac2-af46-00211bd816ff"]
   }]

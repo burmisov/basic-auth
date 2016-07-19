@@ -14,7 +14,7 @@ import * as actions from '../reducers/actions';
 function select(state) {
   return {
     layers: state.get('layers'),
-    users: state.get('users'),
+    users: state.get('authentificationUsers'),
   };
 }
 

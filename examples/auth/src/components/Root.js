@@ -4,7 +4,7 @@ import { combineReducers } from 'redux-immutablejs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import reducers from '../reducers';
-import auth from '../../../src/redux';
+import { authentificationReducer } from '../../src';
 import createRoutes from '../createRoutes';
 
 injectTapEventPlugin();
@@ -13,7 +13,7 @@ const createThunkedStore = applyMiddleware(thunk)(createStore);
 
 const reduxStore = createThunkedStore(combineReducers({
   ...reducers,
-  ...auth,
+  ...authentificationReducer,
 }));
 
 export default createRoutes(reduxStore);

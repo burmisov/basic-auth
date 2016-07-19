@@ -1,6 +1,9 @@
 export const LOAD_USER = 'LOAD_USER';
 export const LOAD_USER_FAILED = 'LOAD_USER_FAILED';
 export const LOAD_USER_COMPLETE = 'LOAD_USER_COMPLETE';
+export const LOAD_USERS = 'LOAD_USERS';
+export const LOAD_USERS_COMPLETE = 'LOAD_USERS_COMPLETE';
+export const LOAD_USERS_FAILED = 'LOAD_USERS_FAILED';
 
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_IN_COMPLETE = 'SIGN_IN_COMPLETE';

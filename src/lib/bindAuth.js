@@ -1,3 +1,5 @@
+/* eslint no-param-reassign: ["error", { "props": false }]*/
+
 import checkAccess from './checkAccess';
 
 export default function (redux, handleSignIn, handleDenied) {
@@ -9,11 +11,11 @@ export default function (redux, handleSignIn, handleDenied) {
     if (user && !user.isFetching && !user.error && user.profile.name) {
       if (checkAccess(user, accessPermission, resourceId)) {
         return;
-      } else {
-        nextState.accessPermission = accessPermission;
-        nextState.resourceId = resourceId;
-        handleSignIn(nextState, transition);
       }
+
+      nextState.accessPermission = accessPermission;
+      nextState.resourceId = resourceId;
+      handleSignIn(nextState, transition);
     }
 
     handleDenied(nextState, transition);

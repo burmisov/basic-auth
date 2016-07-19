@@ -1,10 +1,10 @@
 import { fromJS } from 'immutable';
 
 import {
-  LOAD_ACCESS_TYPES,
-  LOAD_ACCESS_TYPES_COMPLETE,
-  LOAD_ACCESS_TYPES_FAILED,
-} from './actionTypes';
+  LOAD_USERS,
+  LOAD_USERS_COMPLETE,
+  LOAD_USERS_FAILED,
+} from '../actions/ActionTypes';
 
 const defaultState = fromJS({
   isFetching: false,
@@ -14,17 +14,17 @@ const defaultState = fromJS({
 
 export default function layers(state = defaultState, action) {
   switch (action.type) {
-    case LOAD_ACCESS_TYPES:
+    case LOAD_USERS:
       return state.set('isFetching', true)
       .set('error', '');
 
-    case LOAD_ACCESS_TYPES_COMPLETE:
+    case LOAD_USERS_COMPLETE:
       return state.set('isFetching', false)
       .set('error', '')
       .set('lastUpdated', new Date())
       .set('items', action.items);
 
-    case LOAD_ACCESS_TYPES_FAILED:
+    case LOAD_USERS_FAILED:
       return state.set('isFetching', false)
       .set('error', action.error);
 

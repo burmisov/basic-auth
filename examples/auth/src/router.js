@@ -5,7 +5,7 @@ import { checkAccess } from '../../../src';
 const router = new express.Router();
 const db = {};
 
-db.layers = new Datastore('./data/layers.db');
+db.layers = new Datastore('/data/layers.db');
 
 db.layers.loadDatabase();
 

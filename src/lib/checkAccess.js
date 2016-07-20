@@ -1,4 +1,4 @@
-export default function checkAccess(user, accessPermission, resourceId) {
+export default function (user, accessPermission, resourceId) {
   if (user.profile.roles) {
     user.profile.roles.forEach((role) => {
       if (role.accessPermissions[accessPermission]) {

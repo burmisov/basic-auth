@@ -1,7 +1,4 @@
-import UserActions from './UserActions';
-import UsersActions from './UsersActions';
+import * as UserActions from './UserActions';
+import * as UsersActions from './UsersActions';
 
-export default {
-  ...UserActions,
-  ...UsersActions,
-};
+export default Object.assign({}, UserActions, UsersActions);

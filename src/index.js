@@ -1,15 +1,15 @@
-import createAuthentification from './lib/createAuthentification';
-import checkAccess from './lib/checkAccess';
-import bindAuthentification from './lib/bindAuthentification';
-import calcMd5 from './lib/calcMd5';
-import actions from './redux/actions';
-import reducer from './redux';
+const bindAuthentification = require('./lib/bindAuthentification').default;
+const createAuthentification = require('./lib/createAuthentification').default;
+const checkAccess = require('./lib/checkAccess').default;
+const calcMd5 = require('./lib/calcMd5').default;
+const authentificationActions = require('./redux/actions').default;
+const authentificationReducer = require('./redux').default;
 
 module.exports = {
-  createAuthentification,
   bindAuthentification,
+  createAuthentification,
   checkAccess,
   calcMd5,
-  authentificationActions: actions,
-  authentificationReducer: reducer,
+  authentificationActions,
+  authentificationReducer,
 };

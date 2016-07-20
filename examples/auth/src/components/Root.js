@@ -4,8 +4,8 @@ import { combineReducers } from 'redux-immutablejs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import reducers from '../reducers';
-import { authentificationReducer } from '../../src';
 import createRoutes from '../createRoutes';
+import { authentificationReducer } from '../../../../src';
 
 injectTapEventPlugin();
 

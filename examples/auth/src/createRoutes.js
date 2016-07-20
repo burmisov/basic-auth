@@ -8,7 +8,6 @@ import SignIn from './components/SignIn';
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import App from './components/App';
-
 import { bindAuthentification } from '../../../src';
 
 export default (reduxStore) => {

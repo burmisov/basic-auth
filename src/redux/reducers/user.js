@@ -18,7 +18,7 @@ const defaultState = fromJS({
   profile: {},
 });
 
-export default function layers(state = defaultState, action) {
+export default function (state = defaultState, action) {
   switch (action.type) {
     case SIGN_IN:
     case LOAD_USER:

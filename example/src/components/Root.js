@@ -15,7 +15,7 @@ const createThunkedStore = applyMiddleware(thunk)(createStore);
 
 const reduxStore = createThunkedStore(combineReducers({
   ...reducers,
-  // ...authentificationReducer,
+  ...authentificationReducer,
 }));
 
 export default createRoutes(reduxStore);

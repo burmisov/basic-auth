@@ -12,9 +12,11 @@ import Paper from 'material-ui/Paper';
 import * as actions from '../reducers/actions';
 
 function select(state) {
+  console.log(state);
   return {
     layers: state.get('layers'),
-    users: state.get('authentificationUsers'),
+    users: state.get('users'),
+    user: state.get('user'),
   };
 }
 

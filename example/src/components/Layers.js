@@ -4,12 +4,12 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { List, ListItem } from 'material-ui/List';
 import uuid from 'uuid';
 
-const Layers = () => (
+const Layers = ({ layers }) => (
   <MuiThemeProvider muiTheme={getMuiTheme()}>
     <List>
       {
-        this.props.layers.get('items') &&
-        this.props.layers.get('items').map((item) => (
+        layers.get('items') &&
+        layers.get('items').map((item) => (
           <ListItem
             key={uuid.v4()}
           >

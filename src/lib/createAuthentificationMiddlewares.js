@@ -1,9 +1,8 @@
 /* eslint no-param-reassign: ["error", { "props": false }]*/
 
 import session from 'express-session';
-import createRouter from './createRouter';
 
-export default function (app, options) {
+export default function (store) {
   const sessionMiddleware = session({
     secret: 'geoworks-auth',
     resave: false,
@@ -11,7 +10,7 @@ export default function (app, options) {
   });
 
   function autoLoginMiddleware(req, res, next) {
-    options.store.getUsers((err, data) => {
+    store.getUsers((err, data) => {
       if (err) {
         throw err;
       }
@@ -38,7 +37,5 @@ export default function (app, options) {
     });
   }
 
-  app.use(sessionMiddleware);
-  app.use(autoLoginMiddleware);
-  app.use(createRouter(options));
+  return [sessionMiddleware, autoLoginMiddleware];
 }

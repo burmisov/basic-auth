@@ -1,12 +1,20 @@
 import WebpackDevServer from 'webpack-dev-server';
 import webpack from 'webpack';
-import webpackConfig from '../webpack.config';
 import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
+import path from 'path';
+
+import webpackConfig from '../webpack.config';
 import router from './router';
+import { createAuthentificationMiddlewares } from '../../src';
+import createStore from './JSONStore';
 
 const app = express();
+
+app.use(createAuthentificationMiddlewares(
+  createStore(path.join(__dirname, '../data/store.json'))
+));
 
 app.use(bodyParser.json({ limit: '1024mb' }));
 app.use(router);
@@ -22,7 +30,7 @@ const server = new WebpackDevServer(compiler, {
   hot: true,
   historyApiFallback: true,
   proxy: {
-    '/rest/*': 'http://localhost:6139',
+    '/*': 'http://localhost:6139',
   },
 });
 

@@ -1,65 +1,39 @@
-const webpack = require('webpack');
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-  entry: {
-    app: [
-      'webpack/hot/dev-server',
-      './src/app.js',
-    ],
-  },
-
+  context: path.resolve(__dirname, '..'),
+  devtool: '#inline-source-map',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './example/src/app',
+  ],
   output: {
-    path: './dist',
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
   },
-
-  module: {
-    loaders: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        loader: 'react-hot!babel',
-      },
-      {
-        test: /\.css$/,
-        loader: 'style!css',
-      },
-      {
-        test: /\.less$/,
-        loader: 'style!css!less',
-      },
-      {
-        test: /\.html$/,
-        loader: 'file?name=[name].[ext]',
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
-        exclude: /node_modules[\\|\/]leaflet[\\|\/]dist[\\|\/]images/,
-        loader: 'url-loader?limit=10000&name=/images/[name].[ext]',
-      },
-      {
-        test: /\.(png|jpg)$/,
-        include: /node_modules[\\|\/]leaflet[\\|\/]dist[\\|\/]images/,
-        loader: 'file?name=/images/[name].[ext]',
-      },
-      {
-        test: /\.(eot|woff|woff2|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader?name=/fonts/[name].[ext]',
-      },
-    ],
-  },
-
-  resolve: {
-    root: [
-      process.cwd(),
-      path.resolve(process.cwd(), 'lib'),
-    ],
-  },
-
-  devtool: '#inline-source-map',
-
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
   ],
+  module: {
+    loaders: [
+      {
+        test: /.js$/,
+        loaders: ['react-hot', 'babel'],
+        include: [
+          path.join(__dirname, 'src'),
+          path.resolve(__dirname, '../src'),
+        ],
+      },
+      {
+        test: /.html$/,
+        loaders: ['file?name=[name].[ext]'],
+      },
+      {
+        test: /.css$/,
+        loaders: ['file?name=[name].[ext]'],
+      },
+    ],
+  },
 };

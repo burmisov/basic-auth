@@ -1,60 +1,27 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import FlatButton from 'material-ui/FlatButton';
-import Divider from 'material-ui/Divider';
-import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
 import { List, ListItem } from 'material-ui/List';
 import uuid from 'uuid';
 
-const style = {
-  marginLeft: 20,
-};
-
-class Users extends Component {
-  render() {
-    return (
-      <div>
-        <MuiThemeProvider muiTheme={getMuiTheme()}>
-          <div>
-            <Paper zDepth={2}>
-              <Divider />
-              <TextField
-                hintText="Описание"
-                style={style}
-                underlineShow={false}
-                ref="description"
-              />
-              <Divider />
-
-              <FlatButton
-                label="Добавить"
-                onClick={() => {
-                  this.props.actions.insertUser({
-                    description: this.refs.description.input.value,
-                  });
-                }}
-              />
-            </Paper>
-            <List>
-              {
-                this.props.users.get('items') &&
-                this.props.users.get('items').map((item) => (
-                  <ListItem
-                    key={uuid.v4()}
-                  >
-                    {item.description}
-                  </ListItem>
-                ))
-              }
-            </List>
-          </div>
-        </MuiThemeProvider>
-      </div>
-    );
-  }
-}
+const Users = ({ users }) => (
+  <MuiThemeProvider muiTheme={getMuiTheme()}>
+    <div>
+      <List>
+        {
+          users.get('items') &&
+          users.get('items').map((item) => (
+            <ListItem
+              key={uuid.v4()}
+            >
+              {item.displayName}
+            </ListItem>
+          ))
+        }
+      </List>
+    </div>
+  </MuiThemeProvider>
+);
 
 Users.propTypes = {
   layers: PropTypes.object,

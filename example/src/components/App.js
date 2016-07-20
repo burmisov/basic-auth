@@ -9,6 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper';
 
+import { authentificationActions } from '../../../src';
 import * as actions from '../reducers/actions';
 
 function select(state) {
@@ -28,7 +29,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(actions.loadUsers());
+    this.props.dispatch(authentificationActions.loadUsers());
   }
 
   render() {

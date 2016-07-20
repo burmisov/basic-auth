@@ -7,8 +7,6 @@ import reducers from '../reducers';
 import createRoutes from '../createRoutes';
 import { authentificationReducer } from '../../../src';
 
-console.log(authentificationReducer);
-
 injectTapEventPlugin();
 
 const createThunkedStore = applyMiddleware(thunk)(createStore);

@@ -13,7 +13,6 @@ import { authentificationActions } from '../../../src';
 import * as actions from '../reducers/actions';
 
 function select(state) {
-  console.log(state);
   return {
     layers: state.get('layers'),
     users: state.get('users'),
@@ -30,6 +29,7 @@ class App extends Component {
 
   componentDidMount() {
     this.props.dispatch(authentificationActions.loadUsers());
+    this.props.dispatch(actions.loadLayers());
   }
 
   render() {
@@ -42,7 +42,11 @@ class App extends Component {
     const content = React.cloneElement(children, {
       layers: this.props.layers,
       users: this.props.users,
-      actions: bindActionCreators(actions, dispatch),
+      user: this.props.user,
+      actions: {
+        ...bindActionCreators(actions, dispatch),
+        ...bindActionCreators(authentificationActions, dispatch),
+      }
     });
 
     return (
@@ -58,9 +62,11 @@ class App extends Component {
             <Tabs
               value={location.pathname}
               onChange={(value) => {
-                browserHistory.push({
-                  pathname: value,
-                });
+                if (typeof value === 'string') {
+                  browserHistory.push({
+                    pathname: value,
+                  });
+                }
               }}
             >
               <Tab

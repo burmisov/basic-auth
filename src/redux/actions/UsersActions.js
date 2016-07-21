@@ -21,7 +21,7 @@ export function loadUsers() {
       type: types.LOAD_USERS,
     });
 
-    fetch('/auth/users').then((response) => {
+    fetch('/api/auth/users').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }

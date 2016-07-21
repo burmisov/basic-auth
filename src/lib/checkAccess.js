@@ -1,15 +1,17 @@
 export default function (user, accessPermission, resourceId) {
-  if (user.profile.roles) {
-    user.profile.roles.forEach((role) => {
-      if (role.accessPermissions[accessPermission]) {
-        role.accessPermissions[accessPermission].forEach((id) => {
-          if (id === resourceId) {
-            return true;
-          }
-        });
+  let ret = false;
+
+  if (user && user.profile && user.profile.roles) {
+    const rolePermissions = user.profile.roles.filter(
+      role => role.accessPermissions[accessPermission]
+    );
+
+    if (rolePermissions && rolePermissions.length) {
+      if (rolePermissions[0].indexOf(resourceId) > -1) {
+        ret = true;
       }
-    });
+    }
   }
 
-  return false;
+  return ret;
 }

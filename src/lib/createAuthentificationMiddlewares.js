@@ -22,18 +22,16 @@ export default function (store) {
 
         if (user && user.length) {
           req.user = user[0];
-
-          return next();
         }
       } else {
         user = data.filter(item => item.name === 'public');
 
         if (user && user.length) {
           req.user = user[0];
-
-          return next();
         }
       }
+
+      return next();
     });
   }
 

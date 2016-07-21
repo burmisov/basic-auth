@@ -1,23 +1,22 @@
-import React, { Component } from 'react';
-
+import React, { PropTypes, Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { calcMd5 } from '../../../src';
 
 class SignIn extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleSignIn = this.handleSignIn.bind(this);
-  }
-
   componentDidMount() {
     this.refs.username.focus();
   }
 
-  handleSignIn() {}
+  handleSignIn() {
+    this.props.actions.signIn(
+      this.refs.username.input.value,
+      calcMd5(this.refs.password.input.value)
+    );
+  }
 
   render() {
     return (
@@ -44,7 +43,7 @@ class SignIn extends Component {
             <FlatButton
               label="Войти"
               style={{ margin: 12 }}
-              onClick={this.handleSignIn}
+              onClick={::this.handleSignIn}
             />
           </div>
         </MuiThemeProvider>
@@ -52,5 +51,11 @@ class SignIn extends Component {
     );
   }
 }
+
+SignIn.propTypes = {
+  users: PropTypes.object,
+  user: PropTypes.object,
+  actions: PropTypes.object,
+};
 
 export default SignIn;

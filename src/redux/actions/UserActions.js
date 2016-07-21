@@ -15,15 +15,25 @@ export function signInFailed(error) {
   };
 }
 
-export function signIn() {
+export function signIn(name, password) {
   return dispatch => {
     dispatch({
       type: types.SIGN_IN,
     });
 
-    fetch('/auth/signin').then((response) => {
+    fetch('/api/auth/signin', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        password,
+      }),
+    }).then((response) => {
       if (response.status !== 200) {
-        throw new Error('Bad response from server');
+        dispatch(signInFailed('Bad response from server'));
       }
       return response.json();
     })
@@ -53,7 +63,7 @@ export function loadUser() {
       type: types.LOAD_USER,
     });
 
-    fetch('/auth/user').then((response) => {
+    fetch('/api/auth/user').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }
@@ -84,7 +94,7 @@ export function signOut() {
       type: types.SIGN_OUT,
     });
 
-    fetch('/auth/signout').then((response) => {
+    fetch('/api/auth/signout').then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }

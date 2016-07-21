@@ -8,7 +8,8 @@ import { createRouterMiddlewares, checkAccess } from '../../src';
 const router = new express.Router();
 
 router.use(createRouterMiddlewares(
-  createStore(path.join(__dirname, '../data/store.json'))
+  createStore(path.join(__dirname, '../data/store.json')),
+  'api'
 ));
 
 const db = {};
@@ -19,11 +20,12 @@ db.layers.loadDatabase();
 
 router.get('/api/layers', (req, res) => {
   db.layers.find({}, (err, docs) => {
+    console.log(req.user);
     if (err) {
       res.sendStatus(500);
+    } else {
+      res.json(docs.filter(item => checkAccess(req.user, 'viewing', item.id)));
     }
-
-    res.json(docs.filter(item => checkAccess(req.user, 'viewing', item.id)));
   });
 });
 

@@ -1,10 +1,11 @@
 /* eslint no-shadow: ["error", { "allow": ["err"] }]*/
-
 import checkAccess from './checkAccess';
 
-export default function (store) {
-  function getUserRouterMiddleware(req, res) {
-    if (req.method === 'GET' && req.path === '/auth/user') {
+export default function (store, basename) {
+  const base = basename || '';
+
+  function getUserRouterMiddleware(req, res, next) {
+    if (req.method === 'GET' && req.path === `/${base}/auth/user`) {
       if (req.user) {
         res.json(req.user);
       } else {
@@ -12,10 +13,12 @@ export default function (store) {
         // сделать res.redirect и вынести в настройки куда редиректиться при случае
       }
     }
+
+    next();
   }
 
-  function postSignInRouterMiddleware(req, res) {
-    if (req.method === 'POST' && req.path === '/auth/signin') {
+  function postSignInRouterMiddleware(req, res, next) {
+    if (req.method === 'POST' && req.path === `/${base}/auth/signin`) {
       store.getUsers((err, users) => {
         if (err) {
           res.sendStatus(500);
@@ -29,11 +32,11 @@ export default function (store) {
           const user = users.filter(item => item.name === req.body.name);
 
           if (user && user.length) {
-            if (user.passwordHash === req.body.password) {
+            if (user[0].passwordHash === req.body.password) {
               let mapping = [];
 
               if (roles) {
-                mapping = roles.filter(role => role.userIds.indexOf(user.id) > -1);
+                mapping = roles.filter(role => role.userIds.indexOf(user[0].id) > -1);
               }
 
               res.json({
@@ -48,11 +51,13 @@ export default function (store) {
           }
         });
       });
+    } else {
+      next();
     }
   }
 
-  function getRolesRouterMiddleware(req, res) {
-    if (req.method === 'GET' && req.path === '/auth/roles') {
+  function getRolesRouterMiddleware(req, res, next) {
+    if (req.method === 'GET' && req.path === `/${base}/auth/roles`) {
       store.getRoles((err, data) => {
         if (err) {
           res.sendStatus(500);
@@ -60,11 +65,13 @@ export default function (store) {
 
         res.json(data.filter(item => checkAccess(req.user, 'viewing', item.id)));
       });
+    } else {
+      next();
     }
   }
 
-  function getUsersRouterMiddleware(req, res) {
-    if (req.method === 'GET' && req.path === '/auth/users') {
+  function getUsersRouterMiddleware(req, res, next) {
+    if (req.method === 'GET' && req.path === `/${base}/auth/users`) {
       store.getUsers((err, users) => {
         if (err) {
           res.sendStatus(500);
@@ -94,6 +101,8 @@ export default function (store) {
           );
         });
       });
+    } else {
+      next();
     }
   }
 

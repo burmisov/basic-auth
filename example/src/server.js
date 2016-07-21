@@ -30,7 +30,7 @@ const server = new WebpackDevServer(compiler, {
   hot: true,
   historyApiFallback: true,
   proxy: {
-    '/*': 'http://localhost:6139',
+    '/api/*': 'http://localhost:6139',
   },
 });
 

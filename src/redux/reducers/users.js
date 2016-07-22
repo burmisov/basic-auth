@@ -4,7 +4,7 @@ import {
   LOAD_USERS,
   LOAD_USERS_COMPLETE,
   LOAD_USERS_FAILED,
-} from '../actions/ActionTypes';
+} from '../actions/types';
 
 const defaultState = fromJS({
   isFetching: false,

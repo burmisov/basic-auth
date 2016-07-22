@@ -9,8 +9,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper';
 
-import { authentificationActions } from '../../../src';
-import * as actions from '../reducers/actions';
+import { actions } from '../../../src';
+import * as appActions from '../reducers/actions';
 
 function select(state) {
   return {
@@ -28,8 +28,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(authentificationActions.loadUsers());
-    this.props.dispatch(actions.loadLayers());
+    this.props.dispatch(actions.loadUsers());
+    this.props.dispatch(appActions.loadLayers());
   }
 
   render() {
@@ -45,8 +45,8 @@ class App extends Component {
       user: this.props.user,
       actions: {
         ...bindActionCreators(actions, dispatch),
-        ...bindActionCreators(authentificationActions, dispatch),
-      }
+        ...bindActionCreators(appActions, dispatch),
+      },
     });
 
     return (
@@ -116,6 +116,7 @@ class App extends Component {
 App.propTypes = {
   layers: PropTypes.object.isRequired,
   users: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   children: PropTypes.object,
   dispatch: PropTypes.func.isRequired,

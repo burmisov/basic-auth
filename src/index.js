@@ -1,18 +1,17 @@
 const bindAuthentification = require('./lib/bindAuthentification').default;
-const createAuthentificationMiddlewares =
-  require('./lib/createAuthentificationMiddlewares').default;
-const createRouterMiddlewares = require('./lib/createRouterMiddlewares').default;
+const cookiesSession = require('./lib/cookiesSession').default;
+const routes = require('./lib/routes').default;
 const checkAccess = require('./lib/checkAccess').default;
 const calcMd5 = require('./lib/calcMd5').default;
-const authentificationActions = require('./redux/actions').default;
-const authentificationReducer = require('./redux').default;
+const actions = require('./redux/actions').default;
+const reducers = require('./redux').default;
 
 module.exports = {
   bindAuthentification,
-  createAuthentificationMiddlewares,
-  createRouterMiddlewares,
+  cookiesSession,
+  routes,
   checkAccess,
   calcMd5,
-  authentificationActions,
-  authentificationReducer,
+  actions,
+  reducers,
 };

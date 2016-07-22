@@ -21,7 +21,9 @@ export function loadLayers() {
       type: types.LOAD_LAYERS,
     });
 
-    fetch('/api/layers').then((response) => {
+    fetch('/api/layers', {
+      credentials: 'include',
+    }).then((response) => {
       if (response.status !== 200) {
         throw new Error('Bad response from server');
       }

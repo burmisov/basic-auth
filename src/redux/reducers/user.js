@@ -4,13 +4,13 @@ import {
   LOAD_USER,
   LOAD_USER_COMPLETE,
   LOAD_USER_FAILED,
-  SIGN_IN,
-  SIGN_IN_COMPLETE,
-  SIGN_IN_FAILED,
-  SIGN_OUT,
-  SIGN_OUT_COMPLETE,
-  SIGN_OUT_FAILED,
-} from '../actions/ActionTypes';
+  LOGIN,
+  LOGIN_COMPLETE,
+  LOGIN_FAILED,
+  LOGOUT,
+  LOGOUT_COMPLETE,
+  LOGOUT_FAILED,
+} from '../actions/types';
 
 const defaultState = fromJS({
   isFetching: false,
@@ -20,34 +20,34 @@ const defaultState = fromJS({
 
 export default function (state = defaultState, action) {
   switch (action.type) {
-    case SIGN_IN:
+    case LOGIN:
     case LOAD_USER:
       return state.set('isFetching', true)
       .set('error', '');
 
-    case SIGN_IN_COMPLETE:
+    case LOGIN_COMPLETE:
     case LOAD_USER_COMPLETE:
       return state.set('isFetching', false)
       .set('error', '')
       .set('lastUpdated', new Date())
       .set('profile', action.profile);
 
-    case SIGN_IN_FAILED:
+    case LOGIN_FAILED:
     case LOAD_USER_FAILED:
       return state.set('isFetching', false)
       .set('error', action.error);
 
-    case SIGN_OUT:
+    case LOGOUT:
       return state.set('isFetching', true)
       .set('error', '');
 
-    case SIGN_OUT_COMPLETE:
+    case LOGOUT_COMPLETE:
       return state.set('isFetching', false)
       .set('error', '')
       .set('lastUpdated', new Date())
       .set('profile', {});
 
-    case SIGN_OUT_FAILED:
+    case LOGOUT_FAILED:
       return state.set('isFetching', false)
       .set('lastUpdated', new Date())
       .set('error', action.error);

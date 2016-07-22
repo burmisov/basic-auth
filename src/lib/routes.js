@@ -1,24 +1,30 @@
 /* eslint no-shadow: ["error", { "allow": ["err"] }]*/
+/* eslint no-param-reassign: ["error", { "props": false }]*/
+
 import checkAccess from './checkAccess';
 
-export default function (store, basename) {
-  const base = basename || '';
-
-  function getUserRouterMiddleware(req, res, next) {
-    if (req.method === 'GET' && req.path === `/${base}/auth/user`) {
-      if (req.user) {
-        res.json(req.user);
+export default function (store) {
+  function getUserRoute(req, res, next) {
+    if (req.method === 'GET' && req.path === '/user') {
+      if (req.session.user) {
+        res.json(req.session.user);
       } else {
         res.sendStatus(401);
-        // сделать res.redirect и вынести в настройки куда редиректиться при случае
       }
     }
-
     next();
   }
 
-  function postSignInRouterMiddleware(req, res, next) {
-    if (req.method === 'POST' && req.path === `/${base}/auth/signin`) {
+  function logoutRoute(req, res, next) {
+    if (req.method === 'GET' && req.path === '/logout') {
+      req.session.destroy(() => {
+        next();
+      });
+    }
+  }
+
+  function loginRoute(req, res, next) {
+    if (req.method === 'POST' && req.path === '/login') {
       store.getUsers((err, users) => {
         if (err) {
           res.sendStatus(500);
@@ -39,9 +45,15 @@ export default function (store, basename) {
                 mapping = roles.filter(role => role.userIds.indexOf(user[0].id) > -1);
               }
 
-              res.json({
+              const profile = {
                 ...user[0],
                 roles: mapping,
+              };
+
+              req.session.regenerate(() => {
+                req.session.user = profile;
+                req.session.save();
+                res.json(profile);
               });
             } else {
               res.sendStatus(403);
@@ -56,8 +68,8 @@ export default function (store, basename) {
     }
   }
 
-  function getRolesRouterMiddleware(req, res, next) {
-    if (req.method === 'GET' && req.path === `/${base}/auth/roles`) {
+  function getRolesRoute(req, res, next) {
+    if (req.method === 'GET' && req.path === '/roles') {
       store.getRoles((err, data) => {
         if (err) {
           res.sendStatus(500);
@@ -70,8 +82,8 @@ export default function (store, basename) {
     }
   }
 
-  function getUsersRouterMiddleware(req, res, next) {
-    if (req.method === 'GET' && req.path === `/${base}/auth/users`) {
+  function getUsersRoute(req, res, next) {
+    if (req.method === 'GET' && req.path === '/users') {
       store.getUsers((err, users) => {
         if (err) {
           res.sendStatus(500);
@@ -107,9 +119,10 @@ export default function (store, basename) {
   }
 
   return [
-    getUserRouterMiddleware,
-    postSignInRouterMiddleware,
-    getRolesRouterMiddleware,
-    getUsersRouterMiddleware,
+    getUserRoute,
+    loginRoute,
+    logoutRoute,
+    getRolesRoute,
+    getUsersRoute,
   ];
 }

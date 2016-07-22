@@ -1,23 +1,39 @@
+/* eslint-disable no-console */
 import WebpackDevServer from 'webpack-dev-server';
 import webpack from 'webpack';
 import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-
+import Datastore from 'nedb';
 import webpackConfig from '../webpack.config';
-import router from './router';
-import { createAuthentificationMiddlewares } from '../../src';
+import { routes, checkAccess, cookiesSession } from '../../src';
 import createStore from './JSONStore';
 
+const db = {};
+db.layers = new Datastore('/data/layers.db');
+db.layers.loadDatabase();
+
+const store = createStore(path.join(__dirname, '../data/store.json'));
+
 const app = express();
+const router = new express.Router();
 
-app.use(createAuthentificationMiddlewares(
-  createStore(path.join(__dirname, '../data/store.json'))
-));
+router.get('/layers', (req, res) => {
+  db.layers.find({}, (err, docs) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.json(docs.filter(item => checkAccess(req.user, 'viewing', item.id)));
+    }
+  });
+});
 
-app.use(bodyParser.json({ limit: '1024mb' }));
-app.use(router);
+router.use(routes(store));
+
+app.use(bodyParser.json());
+app.use(cookiesSession());
+app.use('/api', router);
 
 const httpServer = new http.Server(app);
 
@@ -37,9 +53,6 @@ const server = new WebpackDevServer(compiler, {
 server.listen(3000, () => {
   httpServer.listen(6139);
 
-  /* eslint-disable no-console */
   console.log('App server listening on port 3000');
   console.log('Build app...');
-
-  /* eslint-enable no-console */
 });

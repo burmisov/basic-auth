@@ -1,74 +1,123 @@
-Аутентификация/авторизация
+Подключение модуля
 ================
 
 На сервере:
 ------------
-Пока хранилище реализовано в виде простого json файла,
-в котором хранятся роли, уровни доступа, и пользователи
+Для хранения логинов, ролей и прочей информации, необходимой для работы модуля,
+необходимо описать хранилище данных (в примере реализовано в виде простого JSON).
+
+Обязательно должны быть определены следующие функции:
 
 ```js
-import auth from '../../src';
-import buildStore from '../../src/store/JSONStore';
+getAccessTypes(callback)
+getUsers(callback)
+getRoles(callback)
+```
 
-auth(app, { store: buildStore(path.join(process.cwd(), '/data/store.json')) });
+Для конфигурации серверной части необходимо сделать импориторивать необходимое
+```js
+import { routes, checkAccess, cookiesSession } from '../../src';
+```
+и использовать следующим образом:
+
+```js
+//...
+const store = createStore(path.join(__dirname, '../data/store.json'));
+//...
+// routes возвратит массив из middleware используемый роутером приложения
+router.use(routes(store));
+// cookiesSession вернет middleware
+app.use(cookiesSession());
+//...
 ```
 
 На клиенте:
 ------------
 
-Необходимо подключить редюсеры модуля аутентификации
+Необходимо подключить reducers модуля
 
 ```js
-import reducers from '../reducers';
-import auth from '../../../src/redux';
-...
+import { reducers } from '../../../src';
+//...
 const reduxStore = createThunkedStore(combineReducers({
   ...reducers,
-  ...auth,
+  ...appReducers,
 }));
-
 ```
 
-Далее для защиты маршрута необходимо определить функцию и вызывать по событие onEnter маршрута:
+Защита ресурсов:
+------------------------
+
+На сервере:
+
+Во-первых текущий пользователь хранится в req.session.user, он и будет
+использоваться для проверки в основной функции проверки checkAccess
 
 ```js
-import bindAuth from '../../src/bindAuth';
+checkAccess(user, permission, resourceId)
+```
+permission - в качестве параметра указывается строка и именем по которому хотите
+чтобы был осуществлен доступ, который задается в типах доступа
 
-...
+resourceId - обычно это id ресурса (например слоя), но также может быть например
+имя маршрута, для того чтобы запретить доступ на клиенте.
 
-const requireAccess = bindAuth(reduxStore, (nextState, replaceState) => {
+Также можно сделать кастомную проверку пра анализируя req.session.user
+
+На клиенте:
+
+После подключения модуля на клиенте в store у нас хранится пользователь который можно получить в select обратившись state.user.
+
+Защита маршрута:
+
+Необходимо в месте где создаются маршруты подключить:
+
+```js
+import { bindAuthentification } from '../../src';
+
+и определить функцию, которую будем использовать на событии onEnter в маршруте.
+(пример без комментариев)
+```
+
+```js
+const requireAccess = bindAuthentification(reduxStore, (nextState, replaceState) => {
   replaceState({
     next: nextState.location.pathname,
-    accessPermission: nextState.accessPermission,
+    accessPermissions: nextState.accessPermission,
     resourceId: nextState.resourceId,
   });
 }, (nextState, replaceState) => {
   replaceState({}, '/403');
 });
-
-...
-
-<Route path="/users" component={Users} onEnter={requireAccess('view', 'users')} />
-
 ```
+Защита маршрута:
 
-Также есть функция для проверки отдельного ресура такого как слой или любой объект который можно однозначно идентифицировать (она же используется для проверки маршрута):
+1-ый способ:
+
+использовать универсальную функция checkAccess (описано выше).
+
+2-ой способ:
+
+анализировать user в store например:
 
 ```js
-checkAccess(user, accessPermission, resourceId)
+user.getIn['roles', 'accessPermissions', accessType, resourceId]
 ```
-Но должны быть выполнены следующие требования:
 
-//TODO
+TODO
+------------
+- Доделать пример
+- Кристализовать пример без авторизации
+- Дописать ридми по составу хранилища с ролями, пользователями ит.д.
+- Сделать модуль конфигурируемым
+- Как-то передать в экшены модуля basename (тоесть например /api как в примере)
+- Что-то еще, что забыл
 
 Запуск примера:
 ------------
-
 ```sh
 git clone https://github.com/tetarenko/auth
-npm install
-cd auth-example
-node index
+npm run example
 ```
 
 [http://localhost:3000](http://localhost:3000)

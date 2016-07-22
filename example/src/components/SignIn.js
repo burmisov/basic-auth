@@ -12,7 +12,7 @@ class SignIn extends Component {
   }
 
   handleSignIn() {
-    this.props.actions.signIn(
+    this.props.actions.login(
       this.refs.username.input.value,
       calcMd5(this.refs.password.input.value)
     );

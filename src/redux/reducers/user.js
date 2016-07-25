@@ -30,7 +30,7 @@ export default function (state = defaultState, action) {
       return state.set('isFetching', false)
       .set('error', '')
       .set('lastUpdated', new Date())
-      .set('profile', action.profile);
+      .set('profile', fromJS(action.profile));
 
     case LOGIN_FAILED:
     case LOAD_USER_FAILED:

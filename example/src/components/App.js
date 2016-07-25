@@ -28,8 +28,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(actions.loadUsers());
-    this.props.dispatch(appActions.loadLayers());
+    this.props.dispatch(actions.loadUser());
   }
 
   render() {
@@ -95,12 +94,12 @@ class App extends Component {
               </Tab>
               <Tab
                 icon={<LockOpen />}
-                label="Аутентификация"
-                value={'/signin'}
+                label="Пользователь"
+                value={'/user'}
               >
                 <div>
                   {
-                    location.pathname === '/signin' &&
+                    location.pathname === '/user' &&
                     content
                   }
                 </div>

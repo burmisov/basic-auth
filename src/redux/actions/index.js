@@ -34,12 +34,15 @@ function login(name, password) {
       }),
     }).then((response) => {
       if (response.status !== 200) {
-        dispatch(loginFailed('Bad response from server'));
+        throw new Error('Bad response from server');
       }
       return response.json();
     })
     .then((profile) => {
       dispatch(loginComplete(profile));
+    })
+    .catch((err) => {
+      dispatch(loginFailed(err));
     });
   };
 }
@@ -68,12 +71,15 @@ function loadUser() {
       credentials: 'include',
     }).then((response) => {
       if (response.status !== 200) {
-        dispatch(loadUserFailed('Bad response from server'));
+        throw new Error('Bad response from server');
       }
       return response.json();
     })
     .then((profile) => {
       dispatch(loadUserComplete(profile));
+    })
+    .catch((err) => {
+      dispatch(loadUserFailed(err));
     });
   };
 }
@@ -101,12 +107,15 @@ function logout() {
       credentials: 'include',
     }).then((response) => {
       if (response.status !== 200) {
-        dispatch(logoutFailed('Bad response from server'));
+        throw new Error('Bad response from server');
       }
       return response.json();
     })
     .then(() => {
       dispatch(logoutComplete());
+    })
+    .catch((err) => {
+      dispatch(logoutFailed(err));
     });
   };
 }
@@ -135,12 +144,15 @@ function loadUsers() {
       credentials: 'include',
     }).then((response) => {
       if (response.status !== 200) {
-        dispatch(loadUsersFailed('Bad response from server'));
+        throw new Error('Bad response from server');
       }
       return response.json();
     })
     .then((items) => {
       dispatch(loadUsersComplete(items));
+    })
+    .catch((err) => {
+      dispatch(loadUsersFailed(err));
     });
   };
 }
@@ -149,4 +161,5 @@ export default {
   login,
   logout,
   loadUsers,
+  loadUser,
 };

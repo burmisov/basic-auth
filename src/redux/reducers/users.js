@@ -22,7 +22,7 @@ export default function (state = defaultState, action) {
       return state.set('isFetching', false)
       .set('error', '')
       .set('lastUpdated', new Date())
-      .set('items', action.items);
+      .set('items', fromJS(action.items));
 
     case LOAD_USERS_FAILED:
       return state.set('isFetching', false)

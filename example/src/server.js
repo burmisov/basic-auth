@@ -11,7 +11,7 @@ import { routes, checkAccess, cookiesSession } from '../../src';
 import createStore from './JSONStore';
 
 const db = {};
-db.layers = new Datastore('/data/layers.db');
+db.layers = new Datastore(path.join(__dirname, '../data/layers.db'));
 db.layers.loadDatabase();
 
 const store = createStore(path.join(__dirname, '../data/store.json'));
@@ -20,11 +20,11 @@ const app = express();
 const router = new express.Router();
 
 router.get('/layers', (req, res) => {
-  db.layers.find({}, (err, docs) => {
+  db.layers.find({}).exec((err, docs) => {
     if (err) {
       res.sendStatus(500);
     } else {
-      res.json(docs.filter(item => checkAccess(req.user, 'viewing', item.id)));
+      res.json(docs.filter(item => checkAccess(req.session.user, 'viewing', item.id)));
     }
   });
 });

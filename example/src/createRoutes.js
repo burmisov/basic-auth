@@ -3,14 +3,16 @@ import { Provider } from 'react-redux';
 import { Router, browserHistory, Route, Redirect } from 'react-router';
 import Layers from './components/Layers';
 import Users from './components/Users';
-import SignIn from './components/SignIn';
+import User from './components/User';
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import App from './components/App';
 // import { bindAuthentification } from '../../src';
+import { actions } from '../../src';
+import * as appActions from './reducers/actions';
 
-export default (reduxStore) => {
-  // const requireAccess = bindAuthentification(reduxStore, (nextState, replaceState) => {
+export default (store) => {
+  // const requireAccess = bindAuthentification(store, (nextState, replaceState) => {
   //   replaceState({
   //     next: nextState.location.pathname,
   //     accessPermissions: nextState.accessPermission,
@@ -20,14 +22,34 @@ export default (reduxStore) => {
   //   replaceState({}, '/403');
   // });
 
+  let previousState;
+  let currentState;
+
+  store.subscribe(() => {
+    currentState = store.getState();
+
+    if (previousState) {
+      if (
+        currentState.getIn(['user', 'profile', 'displayName']) !==
+        previousState.getIn(['user', 'profile', 'displayName'])
+      ) {
+        previousState = store.getState();
+        // store.dispatch(actions.loadUsers());
+        store.dispatch(appActions.loadLayers());
+      }
+    } else {
+      previousState = currentState;
+    }
+  });
+
   return () => (
-    <Provider store={reduxStore}>
+    <Provider store={store}>
       <Router history={browserHistory}>
-        <Redirect from="/" to="/signin" />
+        <Redirect from="/" to="/user" />
         <Route path="/" component={App}>
           <Route path="layers" component={Layers} />
           <Route path="users" component={Users} />
-          <Route path="signin" component={SignIn} />
+          <Route path="user" component={User} />
           <Route path="403" component={AccessDenied} />
           <Route path="*" component={NotFound} />
         </Route>

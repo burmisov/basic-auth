@@ -18,8 +18,10 @@ export default function (store) {
   function logoutRoute(req, res, next) {
     if (req.method === 'GET' && req.path === '/logout') {
       req.session.destroy(() => {
-        next();
+        res.json({});
       });
+    } else {
+      next();
     }
   }
 
@@ -51,7 +53,9 @@ export default function (store) {
               };
 
               req.session.regenerate(() => {
-                req.session.user = profile;
+                req.session.user = {
+                  profile,
+                };
                 req.session.save();
                 res.json(profile);
               });

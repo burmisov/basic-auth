@@ -7,20 +7,19 @@ import User from './components/User';
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import App from './components/App';
-// import { bindAuthentification } from '../../src';
-import { actions } from '../../src';
+import { bindAuthentification } from '../../src';
 import * as appActions from './reducers/actions';
 
 export default (store) => {
-  // const requireAccess = bindAuthentification(store, (nextState, replaceState) => {
-  //   replaceState({
-  //     next: nextState.location.pathname,
-  //     accessPermissions: nextState.accessPermission,
-  //     resourceId: nextState.resourceId,
-  //   });
-  // }, (nextState, replaceState) => {
-  //   replaceState({}, '/403');
-  // });
+  const requireAccess = bindAuthentification(store, (nextState, replace) => {
+    replace({
+      next: nextState.location.pathname,
+      accessPermissions: nextState.accessPermission,
+      resourceId: nextState.resourceId,
+    });
+  }, (nextState, replace) => {
+    replace({}, '/403');
+  });
 
   let previousState;
   let currentState;
@@ -47,8 +46,16 @@ export default (store) => {
       <Router history={browserHistory}>
         <Redirect from="/" to="/user" />
         <Route path="/" component={App}>
-          <Route path="layers" component={Layers} />
-          <Route path="users" component={Users} />
+          <Route
+            path="layers"
+            component={Layers}
+            onEnter={requireAccess('layers', 'route-viewing')}
+          />
+          <Route
+            path="users"
+            component={Users}
+            onEnter={requireAccess('users', 'route-viewing')}
+          />
           <Route path="user" component={User} />
           <Route path="403" component={AccessDenied} />
           <Route path="*" component={NotFound} />

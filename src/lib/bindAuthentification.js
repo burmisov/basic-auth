@@ -6,7 +6,7 @@ export default function (redux, handleSignIn, handleDenied) {
   return (resourceId, accessPermission) => (nextState, transition) => {
     const storeState = redux.getState();
 
-    const user = storeState.user;
+    const user = storeState.get('user').toJS();
 
     if (user && !user.isFetching && !user.error && user.profile.name) {
       if (checkAccess(user, accessPermission, resourceId)) {

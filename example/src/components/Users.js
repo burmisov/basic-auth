@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { List, ListItem } from 'material-ui/List';
-import uuid from 'uuid';
 
 const Users = ({ users }) => (
   <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -12,7 +11,7 @@ const Users = ({ users }) => (
           users.get('items') &&
           users.get('items').map((item) => (
             <ListItem
-              key={uuid.v4()}
+              key={item.id}
             >
               {item.displayName}
             </ListItem>

@@ -9,8 +9,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper';
 
-import { actions } from '../../../src';
+import { getActions } from '../../../src';
 import * as appActions from '../reducers/actions';
+
+const actions = getActions('api');
 
 function select(state) {
   return {

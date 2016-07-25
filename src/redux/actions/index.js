@@ -1,6 +1,8 @@
 import * as types from './types';
 import fetch from 'isomorphic-fetch';
 
+let base;
+
 function loginComplete(profile) {
   return {
     type: types.LOGIN_COMPLETE,
@@ -21,7 +23,7 @@ function login(name, password) {
       type: types.LOGIN,
     });
 
-    fetch('/api/login', {
+    fetch(`${base}/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -67,7 +69,7 @@ function loadUser() {
       type: types.LOAD_USER,
     });
 
-    fetch('/api/user', {
+    fetch(`${base}/user`, {
       credentials: 'include',
     }).then((response) => {
       if (response.status !== 200) {
@@ -103,7 +105,7 @@ function logout() {
       type: types.LOGOUT,
     });
 
-    fetch('/api/logout', {
+    fetch(`${base}/logout`, {
       credentials: 'include',
     }).then((response) => {
       if (response.status !== 200) {
@@ -140,7 +142,7 @@ function loadUsers() {
       type: types.LOAD_USERS,
     });
 
-    fetch('/api/users', {
+    fetch(`${base}/users`, {
       credentials: 'include',
     }).then((response) => {
       if (response.status !== 200) {
@@ -157,9 +159,13 @@ function loadUsers() {
   };
 }
 
-export default {
-  login,
-  logout,
-  loadUsers,
-  loadUser,
-};
+export default (basename) => {
+  base = basename.replace(/^\/|\/$/g, "");
+
+  return {
+    login,
+    logout,
+    loadUsers,
+    loadUser,
+  };
+}

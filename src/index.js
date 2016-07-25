@@ -3,7 +3,7 @@ const cookiesSession = require('./lib/cookiesSession').default;
 const routes = require('./lib/routes').default;
 const checkAccess = require('./lib/checkAccess').default;
 const calcMd5 = require('./lib/calcMd5').default;
-const actions = require('./redux/actions').default;
+const getActions = require('./redux/actions').default;
 const reducers = require('./redux').default;
 
 module.exports = {
@@ -12,6 +12,6 @@ module.exports = {
   routes,
   checkAccess,
   calcMd5,
-  actions,
+  getActions,
   reducers,
 };

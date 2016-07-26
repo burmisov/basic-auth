@@ -6,9 +6,17 @@ export default function (user, accessPermission, resourceId) {
       role => role.accessPermissions[accessPermission]
     );
 
-    if (rolePermissions && rolePermissions.length) {
-      if (rolePermissions[0].accessPermissions[accessPermission].indexOf(resourceId) > -1) {
-        ret = true;
+    if (resourceId) {
+      if (rolePermissions && rolePermissions.length) {
+        if (rolePermissions[0].accessPermissions[accessPermission].indexOf(resourceId) > -1) {
+          ret = true;
+        }
+      }
+    } else {
+      if (rolePermissions && rolePermissions.length) {
+        if (rolePermissions[0].accessPermissions[accessPermission]) {
+          ret = true;
+        }
       }
     }
   }

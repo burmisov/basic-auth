@@ -160,7 +160,7 @@ function loadUsers() {
 }
 
 export default (basename) => {
-  base = basename.replace(/^\/|\/$/g, "");
+  base = basename ? basename.replace(/^\/|\/$/g, '') : '';
 
   return {
     login,
@@ -168,4 +168,4 @@ export default (basename) => {
     loadUsers,
     loadUser,
   };
-}
+};

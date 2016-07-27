@@ -217,8 +217,8 @@
 	exports.default = function (store) {
 	  function getUserRoute(req, res, next) {
 	    if (req.method === 'GET' && req.path === '/user') {
-	      if (req.session.user) {
-	        res.json(req.session.user);
+	      if (req.session.user && req.session.user.profile) {
+	        res.json(req.session.user.profile);
 	      } else {
 	        res.sendStatus(401);
 	      }

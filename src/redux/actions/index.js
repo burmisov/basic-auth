@@ -44,7 +44,7 @@ function login(name, password) {
       dispatch(loginComplete(profile));
     })
     .catch((err) => {
-      dispatch(loginFailed(err));
+      dispatch(loginFailed(err.message));
     });
   };
 }
@@ -81,7 +81,7 @@ function loadUser() {
       dispatch(loadUserComplete(profile));
     })
     .catch((err) => {
-      dispatch(loadUserFailed(err));
+      dispatch(loadUserFailed(err.message));
     });
   };
 }
@@ -117,7 +117,7 @@ function logout() {
       dispatch(logoutComplete());
     })
     .catch((err) => {
-      dispatch(logoutFailed(err));
+      dispatch(logoutFailed(err.message));
     });
   };
 }
@@ -154,7 +154,7 @@ function loadUsers() {
       dispatch(loadUsersComplete(items));
     })
     .catch((err) => {
-      dispatch(loadUsersFailed(err));
+      dispatch(loadUsersFailed(err.message));
     });
   };
 }

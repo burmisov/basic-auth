@@ -4337,7 +4337,7 @@
 	    }).then(function (profile) {
 	      dispatch(loginComplete(profile));
 	    }).catch(function (err) {
-	      dispatch(loginFailed(err));
+	      dispatch(loginFailed(err.message));
 	    });
 	  };
 	}
@@ -4372,7 +4372,7 @@
 	    }).then(function (profile) {
 	      dispatch(loadUserComplete(profile));
 	    }).catch(function (err) {
-	      dispatch(loadUserFailed(err));
+	      dispatch(loadUserFailed(err.message));
 	    });
 	  };
 	}
@@ -4406,7 +4406,7 @@
 	    }).then(function () {
 	      dispatch(logoutComplete());
 	    }).catch(function (err) {
-	      dispatch(logoutFailed(err));
+	      dispatch(logoutFailed(err.message));
 	    });
 	  };
 	}
@@ -4441,7 +4441,7 @@
 	    }).then(function (items) {
 	      dispatch(loadUsersComplete(items));
 	    }).catch(function (err) {
-	      dispatch(loadUsersFailed(err));
+	      dispatch(loadUsersFailed(err.message));
 	    });
 	  };
 	}

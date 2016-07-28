@@ -4322,8 +4322,8 @@
 	    })
 	  }).then(function (response) {
 	    if (response.status !== 200) {
-	      if (response.status === 403) {
-	        throw new Error('Unauthorized');
+	      if (response.status === 404) {
+	        throw new Error('Bad Request');
 	      } else if (response.status === 404) {
 	        throw new Error('Not Found');
 	      }
@@ -4343,8 +4343,8 @@
 	    credentials: 'include'
 	  }).then(function (response) {
 	    if (response.status !== 200) {
-	      if (response.status === 401) {
-	        throw new Error('Unauthorized');
+	      if (response.status === 403) {
+	        throw new Error('Forbidden');
 	      }
 
 	      throw new Error('Bad response from server');

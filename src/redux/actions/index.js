@@ -1,5 +1,6 @@
 import * as types from './types';
-import fetch from 'isomorphic-fetch';
+import api from '../../lib/api';
+// import fetch from 'isomorphic-fetch';
 
 let base;
 
@@ -23,29 +24,14 @@ function login(name, password) {
       type: types.LOGIN,
     });
 
-    fetch(`${base}/login`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        name,
-        password,
-      }),
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error('Bad response from server');
-      }
-      return response.json();
-    })
-    .then((profile) => {
-      dispatch(loginComplete(profile));
-    })
-    .catch((err) => {
-      dispatch(loginFailed(err.message));
-    });
+    api.login(base, name, password)
+      .then((profile) => {
+        dispatch(loginComplete(profile));
+      })
+      .catch((err) => {
+        dispatch(loginFailed(err));
+      })
+    ;
   };
 }
 
@@ -69,20 +55,14 @@ function loadUser() {
       type: types.LOAD_USER,
     });
 
-    fetch(`${base}/user`, {
-      credentials: 'include',
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error('Bad response from server');
-      }
-      return response.json();
-    })
-    .then((profile) => {
-      dispatch(loadUserComplete(profile));
-    })
-    .catch((err) => {
-      dispatch(loadUserFailed(err.message));
-    });
+    api.getUser(base)
+      .then((profile) => {
+        dispatch(loadUserComplete(profile));
+      })
+      .catch((err) => {
+        dispatch(loadUserFailed(err));
+      })
+    ;
   };
 }
 
@@ -105,20 +85,14 @@ function logout() {
       type: types.LOGOUT,
     });
 
-    fetch(`${base}/logout`, {
-      credentials: 'include',
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error('Bad response from server');
-      }
-      return response.json();
-    })
-    .then(() => {
-      dispatch(logoutComplete());
-    })
-    .catch((err) => {
-      dispatch(logoutFailed(err.message));
-    });
+    api.logout(base)
+      .then(() => {
+        dispatch(logoutComplete());
+      })
+      .catch((err) => {
+        dispatch(logoutFailed(err));
+      })
+    ;
   };
 }
 
@@ -142,20 +116,76 @@ function loadUsers() {
       type: types.LOAD_USERS,
     });
 
-    fetch(`${base}/users`, {
-      credentials: 'include',
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error('Bad response from server');
-      }
-      return response.json();
-    })
-    .then((items) => {
-      dispatch(loadUsersComplete(items));
-    })
-    .catch((err) => {
-      dispatch(loadUsersFailed(err.message));
+    api.getUsers(base)
+      .then((items) => {
+        dispatch(loadUsersComplete(items));
+      })
+      .catch((err) => {
+        dispatch(loadUsersFailed(err));
+      })
+    ;
+  };
+}
+
+function loadRolesComplete(items) {
+  return {
+    type: types.LOAD_ROLES_COMPLETE,
+    items,
+  };
+}
+
+function loadRolesFailed(error) {
+  return {
+    type: types.LOAD_ROLES_FAILED,
+    error,
+  };
+}
+
+function loadRoles() {
+  return dispatch => {
+    dispatch({
+      type: types.LOAD_ROLES,
     });
+
+    api.getRoles(base)
+      .then((items) => {
+        dispatch(loadRolesComplete(items));
+      })
+      .catch((err) => {
+        dispatch(loadRolesFailed(err));
+      })
+    ;
+  };
+}
+
+function loadAccessTypesComplete(items) {
+  return {
+    type: types.LOAD_ACCESSTYPES_COMPLETE,
+    items,
+  };
+}
+
+function loadAccessTypesFailed(error) {
+  return {
+    type: types.LOAD_ACCESSTYPES_FAILED,
+    error,
+  };
+}
+
+function loadAccessTypes() {
+  return dispatch => {
+    dispatch({
+      type: types.LOAD_ACCESSTYPES,
+    });
+
+    api.getAccessTypes(base)
+      .then((items) => {
+        dispatch(loadAccessTypesComplete(items));
+      })
+      .catch((err) => {
+        dispatch(loadAccessTypesFailed(err));
+      })
+    ;
   };
 }
 
@@ -167,5 +197,7 @@ export default (basename) => {
     logout,
     loadUsers,
     loadUser,
+    loadRoles,
+    loadAccessTypes,
   };
 };

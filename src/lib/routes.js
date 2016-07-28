@@ -122,11 +122,26 @@ export default function (store) {
     }
   }
 
+  function getAccessTypesRoute(req, res, next) {
+    if (req.method === 'GET' && req.path === '/accesstypes') {
+      store.getAccessTypes((err, data) => {
+        if (err) {
+          res.sendStatus(500);
+        }
+
+        res.json(data.filter(item => checkAccess(req.user, 'viewing', item.id)));
+      });
+    } else {
+      next();
+    }
+  }
+
   return [
     getUserRoute,
     loginRoute,
     logoutRoute,
     getRolesRoute,
     getUsersRoute,
+    getAccessTypesRoute,
   ];
 }

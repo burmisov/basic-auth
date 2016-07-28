@@ -51,8 +51,9 @@
 	var routes = __webpack_require__(6).default;
 	var checkAccess = __webpack_require__(3).default;
 	var calcMd5 = __webpack_require__(7).default;
-	var getActions = __webpack_require__(31).default;
-	var getReducers = __webpack_require__(34).default;
+	var api = __webpack_require__(31).default;
+	var getActions = __webpack_require__(33).default;
+	var getReducers = __webpack_require__(35).default;
 
 	module.exports = {
 	  bindAuthentification: bindAuthentification,
@@ -61,7 +62,8 @@
 	  checkAccess: checkAccess,
 	  calcMd5: calcMd5,
 	  getActions: getActions,
-	  getReducers: getReducers
+	  getReducers: getReducers,
+	  api: api
 	};
 
 /***/ },
@@ -342,7 +344,23 @@
 	    }
 	  }
 
-	  return [getUserRoute, loginRoute, logoutRoute, getRolesRoute, getUsersRoute];
+	  function getAccessTypesRoute(req, res, next) {
+	    if (req.method === 'GET' && req.path === '/accesstypes') {
+	      store.getAccessTypes(function (err, data) {
+	        if (err) {
+	          res.sendStatus(500);
+	        }
+
+	        res.json(data.filter(function (item) {
+	          return (0, _checkAccess2.default)(req.user, 'viewing', item.id);
+	        }));
+	      });
+	    } else {
+	      next();
+	    }
+	  }
+
+	  return [getUserRoute, loginRoute, logoutRoute, getRolesRoute, getUsersRoute, getAccessTypesRoute];
 	};
 
 	var _checkAccess = __webpack_require__(3);
@@ -4284,17 +4302,159 @@
 	  value: true
 	});
 
-	var _types = __webpack_require__(32);
-
-	var types = _interopRequireWildcard(_types);
-
-	var _isomorphicFetch = __webpack_require__(33);
+	var _isomorphicFetch = __webpack_require__(32);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function login(base, name, password) {
+	  return (0, _isomorphicFetch2.default)(base + '/login', {
+	    method: 'POST',
+	    headers: {
+	      Accept: 'application/json',
+	      'Content-Type': 'application/json'
+	    },
+	    credentials: 'include',
+	    body: JSON.stringify({
+	      name: name,
+	      password: password
+	    })
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      if (response.status === 403) {
+	        throw new Error('Unauthorized');
+	      } else if (response.status === 404) {
+	        throw new Error('Not Found');
+	      }
+
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (profile) {
+	    return Promise.resolve(profile);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function getUser(base) {
+	  return (0, _isomorphicFetch2.default)(base + '/user', {
+	    credentials: 'include'
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      if (response.status === 401) {
+	        throw new Error('Unauthorized');
+	      }
+
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (profile) {
+	    return Promise.resolve(profile);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function logout(base) {
+	  return (0, _isomorphicFetch2.default)(base + '/logout', {
+	    credentials: 'include'
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function () {
+	    return Promise.resolve();
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function getUsers(base) {
+	  return (0, _isomorphicFetch2.default)(base + '/users', {
+	    credentials: 'include'
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (items) {
+	    return Promise.resolve(items);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function getRoles(base) {
+	  return (0, _isomorphicFetch2.default)(base + '/roles', {
+	    credentials: 'include'
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (items) {
+	    return Promise.resolve(items);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function getAccessTypes(base) {
+	  return (0, _isomorphicFetch2.default)(base + '/accesstypes', {
+	    credentials: 'include'
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (items) {
+	    return Promise.resolve(items);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	exports.default = {
+	  login: login,
+	  getUser: getUser,
+	  logout: logout,
+	  getUsers: getUsers,
+	  getRoles: getRoles,
+	  getAccessTypes: getAccessTypes
+	};
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+
+	module.exports = require("isomorphic-fetch");
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _types = __webpack_require__(34);
+
+	var types = _interopRequireWildcard(_types);
+
+	var _api = __webpack_require__(31);
+
+	var _api2 = _interopRequireDefault(_api);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	// import fetch from 'isomorphic-fetch';
 
 	var base = void 0;
 
@@ -4318,26 +4478,10 @@
 	      type: types.LOGIN
 	    });
 
-	    (0, _isomorphicFetch2.default)(base + '/login', {
-	      method: 'POST',
-	      headers: {
-	        Accept: 'application/json',
-	        'Content-Type': 'application/json'
-	      },
-	      credentials: 'include',
-	      body: JSON.stringify({
-	        name: name,
-	        password: password
-	      })
-	    }).then(function (response) {
-	      if (response.status !== 200) {
-	        throw new Error('Bad response from server');
-	      }
-	      return response.json();
-	    }).then(function (profile) {
+	    _api2.default.login(base, name, password).then(function (profile) {
 	      dispatch(loginComplete(profile));
 	    }).catch(function (err) {
-	      dispatch(loginFailed(err.message));
+	      dispatch(loginFailed(err));
 	    });
 	  };
 	}
@@ -4362,17 +4506,10 @@
 	      type: types.LOAD_USER
 	    });
 
-	    (0, _isomorphicFetch2.default)(base + '/user', {
-	      credentials: 'include'
-	    }).then(function (response) {
-	      if (response.status !== 200) {
-	        throw new Error('Bad response from server');
-	      }
-	      return response.json();
-	    }).then(function (profile) {
+	    _api2.default.getUser(base).then(function (profile) {
 	      dispatch(loadUserComplete(profile));
 	    }).catch(function (err) {
-	      dispatch(loadUserFailed(err.message));
+	      dispatch(loadUserFailed(err));
 	    });
 	  };
 	}
@@ -4396,17 +4533,10 @@
 	      type: types.LOGOUT
 	    });
 
-	    (0, _isomorphicFetch2.default)(base + '/logout', {
-	      credentials: 'include'
-	    }).then(function (response) {
-	      if (response.status !== 200) {
-	        throw new Error('Bad response from server');
-	      }
-	      return response.json();
-	    }).then(function () {
+	    _api2.default.logout(base).then(function () {
 	      dispatch(logoutComplete());
 	    }).catch(function (err) {
-	      dispatch(logoutFailed(err.message));
+	      dispatch(logoutFailed(err));
 	    });
 	  };
 	}
@@ -4431,17 +4561,66 @@
 	      type: types.LOAD_USERS
 	    });
 
-	    (0, _isomorphicFetch2.default)(base + '/users', {
-	      credentials: 'include'
-	    }).then(function (response) {
-	      if (response.status !== 200) {
-	        throw new Error('Bad response from server');
-	      }
-	      return response.json();
-	    }).then(function (items) {
+	    _api2.default.getUsers(base).then(function (items) {
 	      dispatch(loadUsersComplete(items));
 	    }).catch(function (err) {
-	      dispatch(loadUsersFailed(err.message));
+	      dispatch(loadUsersFailed(err));
+	    });
+	  };
+	}
+
+	function loadRolesComplete(items) {
+	  return {
+	    type: types.LOAD_ROLES_COMPLETE,
+	    items: items
+	  };
+	}
+
+	function loadRolesFailed(error) {
+	  return {
+	    type: types.LOAD_ROLES_FAILED,
+	    error: error
+	  };
+	}
+
+	function loadRoles() {
+	  return function (dispatch) {
+	    dispatch({
+	      type: types.LOAD_ROLES
+	    });
+
+	    _api2.default.getRoles(base).then(function (items) {
+	      dispatch(loadRolesComplete(items));
+	    }).catch(function (err) {
+	      dispatch(loadRolesFailed(err));
+	    });
+	  };
+	}
+
+	function loadAccessTypesComplete(items) {
+	  return {
+	    type: types.LOAD_ACCESSTYPES_COMPLETE,
+	    items: items
+	  };
+	}
+
+	function loadAccessTypesFailed(error) {
+	  return {
+	    type: types.LOAD_ACCESSTYPES_FAILED,
+	    error: error
+	  };
+	}
+
+	function loadAccessTypes() {
+	  return function (dispatch) {
+	    dispatch({
+	      type: types.LOAD_ACCESSTYPES
+	    });
+
+	    _api2.default.getAccessTypes(base).then(function (items) {
+	      dispatch(loadAccessTypesComplete(items));
+	    }).catch(function (err) {
+	      dispatch(loadAccessTypesFailed(err));
 	    });
 	  };
 	}
@@ -4453,12 +4632,14 @@
 	    login: login,
 	    logout: logout,
 	    loadUsers: loadUsers,
-	    loadUser: loadUser
+	    loadUser: loadUser,
+	    loadRoles: loadRoles,
+	    loadAccessTypes: loadAccessTypes
 	  };
 	};
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4472,6 +4653,12 @@
 	var LOAD_USERS = exports.LOAD_USERS = 'LOAD_USERS';
 	var LOAD_USERS_COMPLETE = exports.LOAD_USERS_COMPLETE = 'LOAD_USERS_COMPLETE';
 	var LOAD_USERS_FAILED = exports.LOAD_USERS_FAILED = 'LOAD_USERS_FAILED';
+	var LOAD_ROLES = exports.LOAD_ROLES = 'LOAD_ROLES';
+	var LOAD_ROLES_COMPLETE = exports.LOAD_ROLES_COMPLETE = 'LOAD_ROLES_COMPLETE';
+	var LOAD_ROLES_FAILED = exports.LOAD_ROLES_FAILED = 'LOAD_ROLES_FAILED';
+	var LOAD_ACCESSTYPES = exports.LOAD_ACCESSTYPES = 'LOAD_ACCESSTYPES';
+	var LOAD_ACCESSTYPES_COMPLETE = exports.LOAD_ACCESSTYPES_COMPLETE = 'LOAD_ACCESSTYPES_COMPLETE';
+	var LOAD_ACCESSTYPES_FAILED = exports.LOAD_ACCESSTYPES_FAILED = 'LOAD_ACCESSTYPES_FAILED';
 
 	var LOGIN = exports.LOGIN = 'LOGIN';
 	var LOGIN_COMPLETE = exports.LOGIN_COMPLETE = 'LOGIN_COMPLETE';
@@ -4481,13 +4668,7 @@
 	var LOGOUT_FAILED = exports.LOGOUT_FAILED = 'LOGOUT_FAILED';
 
 /***/ },
-/* 33 */
-/***/ function(module, exports) {
-
-	module.exports = require("isomorphic-fetch");
-
-/***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4496,11 +4677,11 @@
 	  value: true
 	});
 
-	var _user = __webpack_require__(35);
+	var _user = __webpack_require__(36);
 
 	var _user2 = _interopRequireDefault(_user);
 
-	var _users = __webpack_require__(36);
+	var _users = __webpack_require__(37);
 
 	var _users2 = _interopRequireDefault(_users);
 
@@ -4527,7 +4708,7 @@
 	};
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4569,7 +4750,7 @@
 
 	var _immutable = __webpack_require__(2);
 
-	var _types = __webpack_require__(32);
+	var _types = __webpack_require__(34);
 
 	var defaultState = (0, _immutable.fromJS)({
 	  isFetching: false,
@@ -4578,7 +4759,7 @@
 	});
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4592,13 +4773,13 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
-	    case _types.LOAD_USERS:
+	    case _types.LOAD_ROLES:
 	      return state.set('isFetching', true).set('error', '');
 
-	    case _types.LOAD_USERS_COMPLETE:
+	    case _types.LOAD_ROLES_COMPLETE:
 	      return state.set('isFetching', false).set('error', '').set('lastUpdated', new Date()).set('items', (0, _immutable.fromJS)(action.items));
 
-	    case _types.LOAD_USERS_FAILED:
+	    case _types.LOAD_ROLES_FAILED:
 	      return state.set('isFetching', false).set('error', action.error);
 
 	    default:
@@ -4608,7 +4789,7 @@
 
 	var _immutable = __webpack_require__(2);
 
-	var _types = __webpack_require__(32);
+	var _types = __webpack_require__(34);
 
 	var defaultState = (0, _immutable.fromJS)({
 	  isFetching: false,

@@ -14,7 +14,7 @@ function login(base, name, password) {
     }),
   }).then((response) => {
     if (response.status !== 200) {
-      if (response.status === 404) {
+      if (response.status === 400) {
         throw new Error('Bad Request');
       } else if (response.status === 404) {
         throw new Error('Not Found');

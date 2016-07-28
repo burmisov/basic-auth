@@ -222,7 +222,7 @@
 	      if (req.session.user && req.session.user.profile) {
 	        res.json(req.session.user.profile);
 	      } else {
-	        res.sendStatus(401);
+	        res.sendStatus(403);
 	      }
 	    }
 	    next();
@@ -278,7 +278,7 @@
 	                });
 	              })();
 	            } else {
-	              res.sendStatus(403);
+	              res.sendStatus(400);
 	            }
 	          } else {
 	            res.sendStatus(404);
@@ -4322,7 +4322,7 @@
 	    })
 	  }).then(function (response) {
 	    if (response.status !== 200) {
-	      if (response.status === 404) {
+	      if (response.status === 400) {
 	        throw new Error('Bad Request');
 	      } else if (response.status === 404) {
 	        throw new Error('Not Found');

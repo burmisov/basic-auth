@@ -9,7 +9,7 @@ export default function (store) {
       if (req.session.user && req.session.user.profile) {
         res.json(req.session.user.profile);
       } else {
-        res.sendStatus(401);
+        res.sendStatus(403);
       }
     }
     next();
@@ -60,7 +60,7 @@ export default function (store) {
                 res.json(profile);
               });
             } else {
-              res.sendStatus(403);
+              res.sendStatus(400);
             }
           } else {
             res.sendStatus(404);

@@ -8,10 +8,7 @@ function login(options) {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({
-      name: options.name,
-      password: options.password,
-    }),
+    body: JSON.stringify(options),
   }).then((response) => {
     if (response.status !== 200) {
       if (response.status === 403) {
@@ -187,27 +184,22 @@ function createAccessType(options) {
 }
 
 function signup(options) {
-  return fetch(`${(options && options.basename) ? options.basename : ''}/${options.name}/signup`, {
+  return fetch(`${(options && options.basename) ? options.basename : ''}/signup`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({
-      name: options.name,
-      password: options.password,
-    }),
+    body: JSON.stringify(options),
   }).then((response) => {
     if (response.status !== 200) {
       if (response.status === 403) {
         throw new Error('Forbidden');
       } else if (response.status === 400) {
         throw new Error('Bad Request');
-      } else if (response.status === 404) {
-        throw new Error('Not Found');
       } else if (response.status === 304) {
-        throw new Error('Not Found');
+        throw new Error('Not Modified');
       }
 
       throw new Error('Bad response from server');
@@ -217,6 +209,258 @@ function signup(options) {
   .then((profile) => Promise.resolve(profile))
   .catch((err) => Promise.reject(err.message));
 }
+
+function deleteUser(id, options) {
+  return fetch(
+    `${(options && options.basename) ? options.basename : ''}/users/${id}/delete`,
+    {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 400) {
+          throw new Error('Bad Request');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((profile) => Promise.resolve(profile))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function updateUser(id, options) {
+  return fetch(
+    `${(options && options.basename) ? options.basename : ''}/users/${id}/update`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(options),
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((profile) => Promise.resolve(profile))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function updateRole(id, options) {
+  return fetch(
+    `${(options && options.basename) ? options.basename : ''}/roles/${id}/update`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(options),
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function createRole(options) {
+  return fetch(`${(options && options.basename) ? options.basename : ''}/accesstypes/create`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(options),
+  }).then((response) => {
+    if (response.status !== 200) {
+      if (response.status === 403) {
+        throw new Error('Forbidden');
+      } else if (response.status === 409) {
+        throw new Error('Conflict');
+      }
+
+      throw new Error('Bad response from server');
+    }
+    return response.json();
+  })
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function deleteRole(id, options) {
+  return fetch(
+    `${(options && options.basename) ? options.basename : ''}/roles/${id}/delete`, {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function addUserToRole(id, userId, options) {
+  return fetch(
+    `${(options && options.basename) ? options.basename : ''}/roles/${id}/users/${userId}/add`, {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function deleteUserFromRole(id, userId, options) {
+  return fetch(
+    `${(options && options.basename) ? options.basename : ''}/roles/${id}/users/${userId}/delete`, {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function setRolePermission(id, permission, value, options) {
+  return fetch(
+    `${(options && options.basename) ?
+        options.basename : ''}/roles/${id}/permissions/${permission}/set/${value}`,
+    {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function addRolePermission(id, permission, value, options) {
+  return fetch(
+    `${(options && options.basename) ?
+        options.basename : ''}/roles/${id}/permissions/${permission}/add/${value}`,
+    {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
+function deleteRolePermission(id, permission, value, options) {
+  return fetch(
+    `${(options && options.basename) ?
+        options.basename : ''}/roles/${id}/permissions/${permission}/delete/${value}`,
+    {
+      credentials: 'include',
+    }).then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 403) {
+          throw new Error('Forbidden');
+        } else if (response.status === 304) {
+          throw new Error('Not Modified');
+        } else if (response.status === 404) {
+          throw new Error('Not Found');
+        }
+
+        throw new Error('Bad response from server');
+      }
+      return response.json();
+    }
+  )
+  .then((role) => Promise.resolve(role))
+  .catch((err) => Promise.reject(err.message));
+}
+
 
 export default {
   login,
@@ -229,4 +473,14 @@ export default {
   deleteAccessType,
   createAccessType,
   signup,
+  deleteUser,
+  updateUser,
+  updateRole,
+  createRole,
+  deleteRole,
+  addUserToRole,
+  deleteUserFromRole,
+  setRolePermission,
+  addRolePermission,
+  deleteRolePermission,
 };

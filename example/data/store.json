@@ -8,38 +8,6 @@
       "id": "viewing",
       "displayName": "просмотр ресурса"
     },
-    {
-      "id": "reading",
-      "displayName": "чтение ресурса"
-    },
-    {
-      "id": "writing",
-      "displayName": "запись"
-    },
-    {
-      "id": "executing",
-      "displayName": "выполнение"
-    },
-    {
-      "id": "adding",
-      "displayName": "добавление"
-    },
-    {
-      "id": "editing",
-      "displayName": "редактирование ресурса"
-    },
-    {
-      "id": "deleting",
-      "displayName": "удаление"
-    },
-    {
-      "id": "administrators",
-      "displayName": "администрирование"
-    },
-    {
-      "id": "public",
-      "displayName": "публичная"
-    }
   ],
   "users": [{
     "id": "6d4bab4d-196c-455a-b9a5-51352e42363d",

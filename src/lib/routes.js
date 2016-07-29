@@ -1,6 +1,8 @@
 /* eslint no-shadow: ["error", { "allow": ["err"] }]*/
 /* eslint no-param-reassign: ["error", { "props": false }]*/
 
+import parseurl from 'parseurl';
+
 import checkAccess from './checkAccess';
 
 export default function (store) {
@@ -136,6 +138,46 @@ export default function (store) {
     }
   }
 
+  // маршруты администрирования
+
+  function updateAccessTypeRoute(req, res, next) {
+    if (req.method === 'POST') {
+      const params = req.path.replace(/^\/|\/$/g, '').split('/');
+
+      if (params[0] === 'accesstypes' && params[2] === 'update') {
+        store.updateAccessType(params[0], req.body, (err, item) => {
+          if (err) {
+            res.sendStatus(500);
+          }
+          res.json(item);
+        });
+      } else {
+        res.sendStatus(500);
+      }
+    } else {
+      next();
+    }
+  }
+
+  function deleteAccessTypeRoute(req, res, next) {
+    if (req.method === 'POST') {
+      const params = req.path.replace(/^\/|\/$/g, '').split('/');
+
+      if (params[0] === 'accesstypes' && params[2] === 'delete') {
+        store.updateAccessType(params[0], req.body, (err, item) => {
+          if (err) {
+            res.sendStatus(500);
+          }
+          res.json(item);
+        });
+      } else {
+        res.sendStatus(500);
+      }
+    } else {
+      next();
+    }
+  }
+
   return [
     getUserRoute,
     loginRoute,
@@ -143,5 +185,6 @@ export default function (store) {
     getRolesRoute,
     getUsersRoute,
     getAccessTypesRoute,
+    updateAccessTypesRoute,
   ];
 }

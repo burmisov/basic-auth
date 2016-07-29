@@ -4308,8 +4308,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function login(base, name, password) {
-	  return (0, _isomorphicFetch2.default)(base + '/login', {
+	function login(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/login', {
 	    method: 'POST',
 	    headers: {
 	      Accept: 'application/json',
@@ -4317,12 +4317,14 @@
 	    },
 	    credentials: 'include',
 	    body: JSON.stringify({
-	      name: name,
-	      password: password
+	      name: options.name,
+	      password: options.password
 	    })
 	  }).then(function (response) {
 	    if (response.status !== 200) {
-	      if (response.status === 400) {
+	      if (response.status === 403) {
+	        throw new Error('Forbidden');
+	      } else if (response.status === 400) {
 	        throw new Error('Bad Request');
 	      } else if (response.status === 404) {
 	        throw new Error('Not Found');
@@ -4338,8 +4340,8 @@
 	  });
 	}
 
-	function getUser(base) {
-	  return (0, _isomorphicFetch2.default)(base + '/user', {
+	function getUser(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/user', {
 	    credentials: 'include'
 	  }).then(function (response) {
 	    if (response.status !== 200) {
@@ -4357,11 +4359,13 @@
 	  });
 	}
 
-	function logout(base) {
-	  return (0, _isomorphicFetch2.default)(base + '/logout', {
+	function logout(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/logout', {
 	    credentials: 'include'
 	  }).then(function (response) {
-	    if (response.status !== 200) {
+	    if (response.status === 403) {
+	      throw new Error('Forbidden');
+	    } else if (response.status !== 200) {
 	      throw new Error('Bad response from server');
 	    }
 	    return response.json();
@@ -4372,11 +4376,13 @@
 	  });
 	}
 
-	function getUsers(base) {
-	  return (0, _isomorphicFetch2.default)(base + '/users', {
+	function getUsers(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/users', {
 	    credentials: 'include'
 	  }).then(function (response) {
-	    if (response.status !== 200) {
+	    if (response.status === 403) {
+	      throw new Error('Forbidden');
+	    } else if (response.status !== 200) {
 	      throw new Error('Bad response from server');
 	    }
 	    return response.json();
@@ -4387,11 +4393,13 @@
 	  });
 	}
 
-	function getRoles(base) {
-	  return (0, _isomorphicFetch2.default)(base + '/roles', {
+	function getRoles(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/roles', {
 	    credentials: 'include'
 	  }).then(function (response) {
-	    if (response.status !== 200) {
+	    if (response.status === 403) {
+	      throw new Error('Forbidden');
+	    } else if (response.status !== 200) {
 	      throw new Error('Bad response from server');
 	    }
 	    return response.json();
@@ -4402,16 +4410,133 @@
 	  });
 	}
 
-	function getAccessTypes(base) {
-	  return (0, _isomorphicFetch2.default)(base + '/accesstypes', {
+	function getAccessTypes(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/accesstypes', {
 	    credentials: 'include'
 	  }).then(function (response) {
-	    if (response.status !== 200) {
+	    if (response.status === 403) {
+	      throw new Error('Forbidden');
+	    } else if (response.status !== 200) {
 	      throw new Error('Bad response from server');
 	    }
 	    return response.json();
 	  }).then(function (items) {
 	    return Promise.resolve(items);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	// интерфейс для администрирования
+
+	function updateAccessType(id, options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/accesstypes/' + id + '/update', {
+	    method: 'POST',
+	    headers: {
+	      Accept: 'application/json',
+	      'Content-Type': 'application/json'
+	    },
+	    credentials: 'include',
+	    body: JSON.stringify(options)
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      if (response.status === 403) {
+	        throw new Error('Forbidden');
+	      } else if (response.status === 304) {
+	        throw new Error('Not Modified');
+	      } else if (response.status === 404) {
+	        throw new Error('Not Found');
+	      }
+
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (accessType) {
+	    return Promise.resolve(accessType);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function deleteAccessType(id, options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/accesstypes/' + id + '/delete', {
+	    credentials: 'include'
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      if (response.status === 403) {
+	        throw new Error('Forbidden');
+	      } else if (response.status === 304) {
+	        throw new Error('Not Modified');
+	      } else if (response.status === 404) {
+	        throw new Error('Not Found');
+	      }
+
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (accessType) {
+	    return Promise.resolve(accessType);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function createAccessType(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/accesstypes/create', {
+	    method: 'POST',
+	    headers: {
+	      Accept: 'application/json',
+	      'Content-Type': 'application/json'
+	    },
+	    credentials: 'include',
+	    body: JSON.stringify(options)
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      if (response.status === 403) {
+	        throw new Error('Forbidden');
+	      } else if (response.status === 409) {
+	        throw new Error('Conflict');
+	      }
+
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (accessType) {
+	    return Promise.resolve(accessType);
+	  }).catch(function (err) {
+	    return Promise.reject(err.message);
+	  });
+	}
+
+	function signup(options) {
+	  return (0, _isomorphicFetch2.default)((options && options.basename ? options.basename : '') + '/' + options.name + '/signup', {
+	    method: 'POST',
+	    headers: {
+	      Accept: 'application/json',
+	      'Content-Type': 'application/json'
+	    },
+	    credentials: 'include',
+	    body: JSON.stringify({
+	      name: options.name,
+	      password: options.password
+	    })
+	  }).then(function (response) {
+	    if (response.status !== 200) {
+	      if (response.status === 403) {
+	        throw new Error('Forbidden');
+	      } else if (response.status === 400) {
+	        throw new Error('Bad Request');
+	      } else if (response.status === 404) {
+	        throw new Error('Not Found');
+	      } else if (response.status === 304) {
+	        throw new Error('Not Found');
+	      }
+
+	      throw new Error('Bad response from server');
+	    }
+	    return response.json();
+	  }).then(function (profile) {
+	    return Promise.resolve(profile);
 	  }).catch(function (err) {
 	    return Promise.reject(err.message);
 	  });
@@ -4423,7 +4548,11 @@
 	  logout: logout,
 	  getUsers: getUsers,
 	  getRoles: getRoles,
-	  getAccessTypes: getAccessTypes
+	  getAccessTypes: getAccessTypes,
+	  updateAccessType: updateAccessType,
+	  deleteAccessType: deleteAccessType,
+	  createAccessType: createAccessType,
+	  signup: signup
 	};
 
 /***/ },
@@ -4454,9 +4583,7 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	// import fetch from 'isomorphic-fetch';
-
-	var base = void 0;
+	var basename = void 0;
 
 	function loginComplete(profile) {
 	  return {
@@ -4472,13 +4599,16 @@
 	  };
 	}
 
-	function login(name, password) {
+	function login(options) {
 	  return function (dispatch) {
 	    dispatch({
 	      type: types.LOGIN
 	    });
 
-	    _api2.default.login(base, name, password).then(function (profile) {
+	    _api2.default.login({
+	      basename: options && options.basename || basename,
+	      name: options.name, password: options.password
+	    }).then(function (profile) {
 	      dispatch(loginComplete(profile));
 	    }).catch(function (err) {
 	      dispatch(loginFailed(err));
@@ -4500,13 +4630,13 @@
 	  };
 	}
 
-	function loadUser() {
+	function loadUser(options) {
 	  return function (dispatch) {
 	    dispatch({
 	      type: types.LOAD_USER
 	    });
 
-	    _api2.default.getUser(base).then(function (profile) {
+	    _api2.default.getUser({ basename: options && options.basename || basename }).then(function (profile) {
 	      dispatch(loadUserComplete(profile));
 	    }).catch(function (err) {
 	      dispatch(loadUserFailed(err));
@@ -4527,13 +4657,13 @@
 	  };
 	}
 
-	function logout() {
+	function logout(options) {
 	  return function (dispatch) {
 	    dispatch({
 	      type: types.LOGOUT
 	    });
 
-	    _api2.default.logout(base).then(function () {
+	    _api2.default.logout({ basename: options && options.basename || basename }).then(function () {
 	      dispatch(logoutComplete());
 	    }).catch(function (err) {
 	      dispatch(logoutFailed(err));
@@ -4555,13 +4685,13 @@
 	  };
 	}
 
-	function loadUsers() {
+	function loadUsers(options) {
 	  return function (dispatch) {
 	    dispatch({
 	      type: types.LOAD_USERS
 	    });
 
-	    _api2.default.getUsers(base).then(function (items) {
+	    _api2.default.getUsers({ basename: options && options.basename || basename }).then(function (items) {
 	      dispatch(loadUsersComplete(items));
 	    }).catch(function (err) {
 	      dispatch(loadUsersFailed(err));
@@ -4583,13 +4713,13 @@
 	  };
 	}
 
-	function loadRoles() {
+	function loadRoles(options) {
 	  return function (dispatch) {
 	    dispatch({
 	      type: types.LOAD_ROLES
 	    });
 
-	    _api2.default.getRoles(base).then(function (items) {
+	    _api2.default.getRoles({ basename: options && options.basename || basename }).then(function (items) {
 	      dispatch(loadRolesComplete(items));
 	    }).catch(function (err) {
 	      dispatch(loadRolesFailed(err));
@@ -4611,13 +4741,13 @@
 	  };
 	}
 
-	function loadAccessTypes() {
+	function loadAccessTypes(options) {
 	  return function (dispatch) {
 	    dispatch({
 	      type: types.LOAD_ACCESSTYPES
 	    });
 
-	    _api2.default.getAccessTypes(base).then(function (items) {
+	    _api2.default.getAccessTypes({ basename: options && options.basename || basename }).then(function (items) {
 	      dispatch(loadAccessTypesComplete(items));
 	    }).catch(function (err) {
 	      dispatch(loadAccessTypesFailed(err));
@@ -4625,8 +4755,8 @@
 	  };
 	}
 
-	exports.default = function (basename) {
-	  base = basename ? basename.replace(/^\/|\/$/g, '') : '';
+	exports.default = function (path) {
+	  basename = path ? path.replace(/^\/|\/$/g, '') : '';
 
 	  return {
 	    login: login,

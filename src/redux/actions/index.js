@@ -1,8 +1,7 @@
 import * as types from './types';
 import api from '../../lib/api';
-// import fetch from 'isomorphic-fetch';
 
-let base;
+let basename;
 
 function loginComplete(profile) {
   return {
@@ -18,13 +17,16 @@ function loginFailed(error) {
   };
 }
 
-function login(name, password) {
+function login(options) {
   return dispatch => {
     dispatch({
       type: types.LOGIN,
     });
 
-    api.login(base, name, password)
+    api.login({
+      basename: (options && options.basename) || basename,
+      name: options.name, password: options.password,
+    })
       .then((profile) => {
         dispatch(loginComplete(profile));
       })
@@ -49,13 +51,13 @@ function loadUserFailed(error) {
   };
 }
 
-function loadUser() {
+function loadUser(options) {
   return dispatch => {
     dispatch({
       type: types.LOAD_USER,
     });
 
-    api.getUser(base)
+    api.getUser({ basename: (options && options.basename) || basename })
       .then((profile) => {
         dispatch(loadUserComplete(profile));
       })
@@ -79,13 +81,13 @@ function logoutFailed(error) {
   };
 }
 
-function logout() {
+function logout(options) {
   return dispatch => {
     dispatch({
       type: types.LOGOUT,
     });
 
-    api.logout(base)
+    api.logout({ basename: (options && options.basename) || basename })
       .then(() => {
         dispatch(logoutComplete());
       })
@@ -110,13 +112,13 @@ function loadUsersFailed(error) {
   };
 }
 
-function loadUsers() {
+function loadUsers(options) {
   return dispatch => {
     dispatch({
       type: types.LOAD_USERS,
     });
 
-    api.getUsers(base)
+    api.getUsers({ basename: (options && options.basename) || basename })
       .then((items) => {
         dispatch(loadUsersComplete(items));
       })
@@ -141,13 +143,13 @@ function loadRolesFailed(error) {
   };
 }
 
-function loadRoles() {
+function loadRoles(options) {
   return dispatch => {
     dispatch({
       type: types.LOAD_ROLES,
     });
 
-    api.getRoles(base)
+    api.getRoles({ basename: (options && options.basename) || basename })
       .then((items) => {
         dispatch(loadRolesComplete(items));
       })
@@ -172,13 +174,13 @@ function loadAccessTypesFailed(error) {
   };
 }
 
-function loadAccessTypes() {
+function loadAccessTypes(options) {
   return dispatch => {
     dispatch({
       type: types.LOAD_ACCESSTYPES,
     });
 
-    api.getAccessTypes(base)
+    api.getAccessTypes({ basename: (options && options.basename) || basename })
       .then((items) => {
         dispatch(loadAccessTypesComplete(items));
       })
@@ -189,8 +191,8 @@ function loadAccessTypes() {
   };
 }
 
-export default (basename) => {
-  base = basename ? basename.replace(/^\/|\/$/g, '') : '';
+export default (path) => {
+  basename = path ? path.replace(/^\/|\/$/g, '') : '';
 
   return {
     login,

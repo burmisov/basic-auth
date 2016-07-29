@@ -14,10 +14,10 @@ class User extends Component {
   }
 
   handleLogin() {
-    this.props.actions.login(
-      this.refs.username.input.value,
-      calcMd5(this.refs.password.input.value)
-    );
+    this.props.actions.login({
+      name: this.refs.username.input.value,
+      password: calcMd5(this.refs.password.input.value),
+    });
   }
 
   handleLogout() {
